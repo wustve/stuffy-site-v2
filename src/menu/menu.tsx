@@ -9,12 +9,14 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
         this.state = { display: this.props.options };
     }
 
-    filter(event: any) {
-        if (event.target.value === '') {
+    filter = ({target}) => {
+        
+        if (target.value === '') {
             this.setState({display: this.props.options});
         } else {
-            let query = event.target.value.toLowerCase();
-            this.setState({display: this.props.options.filter(stuffy => (stuffy.name + stuffy.animal_type).toLowerCase().indexOf(query) > -1)})
+            let query = target.value.toLowerCase();
+            this.setState({display: this.props.options.filter(stuffy => (stuffy.name + stuffy.animal_type).toLowerCase().includes(query))});
+            console.log(this.state.display)
         }
     }
 
@@ -25,7 +27,7 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
                 
                 <div id='selection'>
                 <NavLink to='/'>Home</NavLink>
-                    {this.props.options.map(stuffy => {
+                    {this.state.display.map(stuffy => {
                         let para = '/' + stuffy.name.split(' ').join('_');
                         para += '/' + stuffy.animal_type.split(' ').join('_');
                         para += '#active';
