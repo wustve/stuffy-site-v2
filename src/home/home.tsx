@@ -4,7 +4,7 @@ import './home.scss'
 export default class Home extends Component<{stevenStuffy: any, monicaStuffy: any}, {}> {
     render() {
         return (
-            <div className = "content">
+            <div id = "homepage">
                 <h1>Stuffy Site</h1>
                 <div id = "stuffyOfTheDayWrapper">
                     <div className = "stuffyOfTheDay">

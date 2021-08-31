@@ -23,6 +23,7 @@
     "outDir": "./dist"
   },
   "include": [
-    "server"
+    "server",
+    "interfaces"
   ]
 }

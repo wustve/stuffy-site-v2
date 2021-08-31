@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import {Route, NavLink, HashRouter} from "react-router-dom";
+import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import './Header.scss';
 
-export default class Header extends Component<{stevenStuffy: any, monicaStuffy: any}, {}> {
+export default class Header extends Component<{stevenStuffy: StuffyMenuData, monicaStuffy: StuffyMenuData}, {}> {
      getLink(name: string, animal_type: string) {
           return ('/' + name.split(' ').join('_') + '/' + animal_type.split(' ').join('_') +'#active');
      }
