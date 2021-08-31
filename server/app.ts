@@ -6,10 +6,12 @@ const {DateTime} = luxon;
 import express_validator from 'express-validator';
 const {validationResult} = express_validator;
 import session from 'express-session';
+import {MainData} from '../interfaces/MainData'
 
 const invalidPermissions = 'You are not permitted to edit, sorry!'
 
 import dotenv from 'dotenv';
+import { StuffyMenuData } from '../interfaces/StuffyMenuData.js';
 dotenv.config();
 
 const app = express();
@@ -22,24 +24,21 @@ app.use(session({
     saveUninitialized: false
 }))
 
-async function menuRetrieve(req: any) {
+async function menuRetrieve(req: any): Promise<MainData> {
     try {
-         var menuResult: any = await new DatabaseController(process.env.DATABASE_URL!).menuResult()
-         menuResult = menuResult!.rows;
-         let stevenStuffy, monicaStuffy;
+         var menuResult: Array<StuffyMenuData> = await new DatabaseController(process.env.DATABASE_URL!).menuResult()
+         let stevenStuffy: StuffyMenuData, monicaStuffy: StuffyMenuData;
          [stevenStuffy, monicaStuffy] = await stuffyOfTheDay(menuResult);
          return {
               stevenStuffy: stevenStuffy,
               monicaStuffy: monicaStuffy,
               options: menuResult,
-              session: req.session
          }
     }
     catch {
-         console.log("ERROR: Something went wrong retrieving items from the db");
+         return Promise.reject("ERROR: Something went wrong retrieving items from the db");
     }
 }
-
 
 async function stuffyOfTheDay(stuffies: any) {
     let stevenStuffies = []
@@ -212,9 +211,22 @@ const publicPath = path.join(path.resolve(), 'build');
 app.use(express.static(publicPath));
 
 app.get('/menu', async (req, res) => {
-    const menuData = await menuRetrieve(req)
+    const menuData: MainData = await menuRetrieve(req)
     res.send(menuData)
 })
+
+app.get("/stuffies/:stuffyName/:stuffyType", async function (req, res) {
+
+     let dbResult = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT * FROM stuffies WHERE name = $1 AND animal_type = $2", [req.params.stuffyName.replace(/_/g, ' '), req.params.stuffyType.replace(/_/g, ' ')])
+     if (dbResult && dbResult.rowCount > 0) {
+          let [selectedStuffy] = dbResult.rows;
+          res.send(selectedStuffy)
+     }
+     else {
+          console.log("ERROR: Something went wrong retrieving this stuffy from the db");
+     }
+})
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'));
  });
