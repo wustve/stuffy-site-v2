@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {Route, NavLink, HashRouter} from "react-router-dom";
 
 import Home from "../home/home";
+import Header from "./Header";
 //import Info from "../Info";
  
 export default class Main extends Component {
@@ -10,6 +11,7 @@ export default class Main extends Component {
       <HashRouter>
         <div className = "body">
           <h1>Stuffy asdasSite</h1>
+          <Header stevenStuffy={{name: "sjsj", animal_type: "bear"}} monicaStuffy={{name: "boy", animal_type: "gorl"}}/>
           <ul className="header">
             <li><NavLink to="/">Home</NavLink></li>
             <li><NavLink to="/info">Info</NavLink></li>
