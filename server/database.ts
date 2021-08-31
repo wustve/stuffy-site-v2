@@ -1,4 +1,5 @@
 import pg from "pg" // const Client = require('pg').Client
+import { StuffyMenuData } from "../interfaces/StuffyMenuData";
 const {Client} = pg;
 export default class DatabaseController {
      private client: pg.Client;
@@ -25,7 +26,12 @@ export default class DatabaseController {
                this.client.end()
           }
      }
-     async menuResult() {
-          return await this.command('Select name, animal_type, image, owner FROM stuffies ORDER BY name, animal_type ASC;')
+     async menuResult(): Promise<Array<StuffyMenuData>> {
+          let data = await this.command('Select name, animal_type, image, owner FROM stuffies ORDER BY name, animal_type ASC;');
+          if (data) {
+               return data.rows;
+          } else {
+               return Promise.reject("Could not get stuffy menu result from db")
+          }
      }
 }
