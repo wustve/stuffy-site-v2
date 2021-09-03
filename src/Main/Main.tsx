@@ -3,7 +3,7 @@ import { Route, NavLink, HashRouter } from "react-router-dom";
 
 import Home from "../home/home";
 import Header from "./Header";
-//import Info from "../Info";
+import Article from "../article/article";
 import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
 import './Main.scss'
@@ -16,7 +16,6 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
       error: null,
       mainData: null,
     }
-
   }
 
   componentDidMount() {
@@ -46,6 +45,7 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
             <Menu options={this.state.mainData.options}></Menu>
             <div className="content">
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
+              <Route path="/:name/:animal_type" component={Article}/>
             </div>
           </HashRouter>
         </div>
