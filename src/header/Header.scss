@@ -10,6 +10,10 @@
      border-bottom:solid;
      border-width: 0.2vw;
      box-sizing: border-box;
+     border-color: var(--border-colour);
+     .active {
+          background-color: var(--element-colour);
+     }
 }
 
 #login-housing{
@@ -69,3 +73,4 @@ input#darkLight {
 input#darkLight:checked + #slider {
 	transform: translateX(5vh);
 }
+
