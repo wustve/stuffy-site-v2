@@ -1,0 +1,71 @@
+#header {
+     width : 90%;
+     margin-left: 10%;
+     background-color:var(--header-menu-colour);
+     display: flex;
+     flex-direction: row;
+     height:7vh;
+     overflow:hidden;
+     font-size:1vw;
+     border-bottom:solid;
+     border-width: 0.2vw;
+     box-sizing: border-box;
+}
+
+#login-housing{
+     flex:1;
+     padding-right: 2vh;
+     display: flex;
+}
+
+#header a{
+     background-color: inherit;
+     color: var(--text-colour);
+     text-decoration: none;
+     font-weight: bold;
+     font-family: 'Merriweather', serif;
+     margin-bottom:auto;
+     margin-top: auto;
+     padding:2vh;
+}
+#header a:hover{
+     background-color: var(--hover-colour) ;
+}
+
+
+#toggle-housing{
+     flex:1;
+     padding: 1vh;
+}
+
+.toggle {
+     cursor: pointer;
+     position: absolute;
+     width: 10vh;
+     right:0;
+     height: 5vh;
+     background-color: var(--element-colour);
+	border-radius: 2.5vh;
+}
+
+input#darkLight {
+     display: none;
+}
+
+#slider,#slider-hidden {
+     position: absolute;
+     width: 4vh;
+     height: 4vh;
+     top: 0.5vh;
+     left: 0.5vh;
+	background: var(--header-menu-colour);
+     border-radius: 2vh;
+     font-size: 2vh;
+     text-align: center;
+     line-height: 3.8vh;
+     color: var(--text-colour);
+}
+
+input#darkLight:checked + #slider {
+	transform: translateX(5vh);
+}
