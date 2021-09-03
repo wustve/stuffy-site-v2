@@ -39,11 +39,12 @@
     padding:0;
     overflow-y:auto;
     height:93vh;
+    .active {
+        background-color: var(--element-colour);
+    }
     
 }
-#active {
-     background-color: var(--element-colour);
-}
+
 #searchBar {
     margin:0;
     height:7vh;

@@ -4,20 +4,6 @@ body {
      color: var(--text-colour);
 }
 
-h1 {
-     display: inline-block;
-     font-size: 3em;
-     margin-bottom: 5px;
-     padding-right: 20px;
-     font-family: 'Merriweather', serif;
-}
-
-h2 {
-     font-size: 2em;
-     margin-bottom: 5px;
-     font-family: 'Merriweather', serif;
-}
-
 #edit {
      display: inline-block;
      background-color: var(--main-bg-colour);
@@ -98,6 +84,19 @@ textarea {
      margin-left: 10%;
      padding-left: 1%;
      border-color: rgb(119, 119, 119);
+     h2 {
+          font-size: 2em;
+          margin-bottom: 5px;
+          font-family: 'Merriweather', serif;
+     }
+     
+     h1 {
+          display: inline-block;
+          font-size: 3em;
+          margin-bottom: 5px;
+          padding-right: 20px;
+          font-family: 'Merriweather', serif;
+     }
 }
 
 #submit , form button{
