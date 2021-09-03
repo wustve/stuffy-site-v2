@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import {Route, NavLink, HashRouter} from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
+import {LocalStorageKey} from "../enums/LocalStorageKey";
+import {ColourMode} from '../enums/ColourMode'
 import './Header.scss';
 
 export default class Header extends Component<{stevenStuffy: StuffyMenuData, monicaStuffy: StuffyMenuData}, {lightMode: boolean, toggleIcon: string}> {
-     constructor(props) {
+     constructor(props: any) {
           super(props);
           this.state = {
                lightMode: false,
@@ -16,14 +18,14 @@ export default class Header extends Component<{stevenStuffy: StuffyMenuData, mon
      }
 
      componentDidMount = () => {
-          const colourMode = localStorage.getItem('colour-mode');
+          const colourMode = localStorage.getItem(LocalStorageKey.ColourMode);
           let html = document.querySelector("html");
           console.log(colourMode);
           if (colourMode) {
-               html.setAttribute("colour-mode", colourMode);
+               html.setAttribute(LocalStorageKey.ColourMode, colourMode);
                this.setState({
-                    lightMode: colourMode === 'light',
-                    toggleIcon: colourMode === 'light'? '\u263C' : '\u263E'
+                    lightMode: colourMode === ColourMode.Light,
+                    toggleIcon: colourMode === ColourMode.Light? '\u263C' : '\u263E'
                });
           }
      }
@@ -31,15 +33,15 @@ export default class Header extends Component<{stevenStuffy: StuffyMenuData, mon
      handleColourToggle = ({target}) => {
           let html = document.querySelector("html");
           if (target.checked) {
-               html.setAttribute("colour-mode", 'light');
-               localStorage.setItem('colour-mode', 'light');
+               html.setAttribute(LocalStorageKey.ColourMode, ColourMode.Light);
+               localStorage.setItem(LocalStorageKey.ColourMode, ColourMode.Light);
                this.setState({
                     lightMode: true,
                     toggleIcon: '\u263C'
                });
           } else {
-               html.setAttribute("colour-mode", 'dark');
-               localStorage.setItem('colour-mode', 'dark');
+               html.setAttribute(LocalStorageKey.ColourMode, ColourMode.Dark);
+               localStorage.setItem(LocalStorageKey.ColourMode, ColourMode.Dark);
                this.setState({
                     lightMode: false,
                     toggleIcon: '\u263E'
