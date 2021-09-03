@@ -56,8 +56,8 @@ export default class Header extends Component<{stevenStuffy: StuffyMenuData, mon
                          <NavLink to='/login'>Login</NavLink>  
                          <NavLink to='/add-stuffy'>Add New Stuffy</NavLink>
                     </div>
-                    <NavLink to={this.getLink(this.props.stevenStuffy)} activeClassName='active'>Steven's stuffy of the day</NavLink>
-                    <NavLink to={this.getLink(this.props.monicaStuffy)} activeClassName='active' >Monica's stuffy of the day</NavLink>
+                    <NavLink to={this.getLink(this.props.stevenStuffy)}>Steven's stuffy of the day</NavLink>
+                    <NavLink to={this.getLink(this.props.monicaStuffy)}>Monica's stuffy of the day</NavLink>
                     <div id="toggle-housing">
                          <label className="toggle">
                               <input type = "checkbox" id = "darkLight" checked={this.state.lightMode} onChange={this.handleColourToggle}/>

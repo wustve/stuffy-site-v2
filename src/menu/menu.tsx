@@ -30,10 +30,10 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
                 <input type='text' id='searchBar' onKeyUp={this.filter} autoComplete="off" placeholder='Search' title='Enter a stuffy'></input>
 
                 <div id='selection'>
-                    <NavLink exact to='/' activeClassName='active'>Home</NavLink>
+                    <NavLink exact to='/'>Home</NavLink>
                     {this.state.display.map(stuffy => {
                         let label = stuffy.name + ' (' + stuffy.animal_type + ')';
-                        return <NavLink to={this.getLink(stuffy)} activeClassName='active'>{label}</NavLink>;
+                        return <NavLink to={this.getLink(stuffy)}>{label}</NavLink>;
                     })}
                 </div>
             </div>)
