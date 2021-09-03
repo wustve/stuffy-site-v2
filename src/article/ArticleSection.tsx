@@ -1,7 +1,11 @@
 import React from "react";
 
 export default function ArticleSection(props) {
-     if (props.content !== null) {
+     console.log(props.title);
+     console.log(props.content);
+     if (props.content === null || props.content === "") {
+          return null;
+     } else {
           return (
                <div>
                     <div className = "title">
@@ -10,7 +14,5 @@ export default function ArticleSection(props) {
                     <p id = {props.title}>{props.content}</p>
                </div>
           );
-     } else {
-          return null;
      }
 }
