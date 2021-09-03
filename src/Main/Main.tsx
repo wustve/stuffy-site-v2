@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 
 import Home from "../home/home";
-import Header from "./Header";
+import Header from "../header/Header";
 import Article from "../article/article";
 import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
