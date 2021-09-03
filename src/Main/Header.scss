@@ -63,6 +63,7 @@ input#darkLight {
      font-size: 2vh;
      text-align: center;
      line-height: 3.8vh;
+     color: var(--text-colour);
 }
 
 input#darkLight:checked + #slider {

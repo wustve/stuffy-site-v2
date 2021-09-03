@@ -7,6 +7,8 @@ import Article from "../article/article";
 import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
 import './Main.scss'
+import '@fontsource/merriweather';
+import './colourmode.scss';
 
 export default class Main extends Component<{}, { isLoaded: boolean, error: any, mainData: MainData }> {
   constructor(props) {
