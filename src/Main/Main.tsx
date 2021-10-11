@@ -6,6 +6,8 @@ import Header from "../header/Header";
 import Article from "../article/article";
 import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
+import Add from "../add/Add";
+import Edit from "../edit/Edit";
 import './Main.scss'
 import '@fontsource/merriweather';
 import './colourmode.scss';
@@ -48,6 +50,8 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
             <div className="content">
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
               <Route path="/:name/:animal_type" component={Article}/>
+              <Route path="/add" component={Add}/>
+              <Route path="/add" component={Edit}/>
             </div>
           </HashRouter>
         </div>
