@@ -4,9 +4,10 @@ import DatabaseController from './database.js';
 import luxon from 'luxon';
 const {DateTime} = luxon;
 import express_validator from 'express-validator';
-const {validationResult} = express_validator;
+const {body, validationResult} = express_validator;
 import session from 'express-session';
 import {MainData} from '../interfaces/MainData'
+import bodyParser from 'body-parser';
 
 const invalidPermissions = 'You are not permitted to edit, sorry!'
 
@@ -16,6 +17,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.use(bodyParser.json());
 
 app.use(session({
     secret: process.env.SECRET!,
@@ -224,6 +226,22 @@ app.get("/stuffies/:stuffyName/:stuffyType", async function (req, res) {
      }
      else {
           console.log("ERROR: Something went wrong retrieving this stuffy from the db");
+     }
+})
+
+app.post("/login", [
+     body("username").not().isEmpty(),
+     body("password").not().isEmpty()
+], async (req: any, res: any) => {
+     if (await isInvalid(req)) {
+          return res.send('Invalid Fields')
+     }
+     else if (req.body.username === process.env.ADMIN_USERNAME && req.body.password === process.env.ADMIN_PASSWORD) {
+          req.session.canEdit = true
+          return res.send('Success')
+     }
+     else {
+          return res.send('Invalid Username or Password')
      }
 })
 

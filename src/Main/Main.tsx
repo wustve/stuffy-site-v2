@@ -9,6 +9,7 @@ import Menu from "../menu/menu";
 import './Main.scss'
 import '@fontsource/merriweather';
 import './colourmode.scss';
+import Login from "../login/login";
 
 export default class Main extends Component<{}, { isLoaded: boolean, error: any, mainData: MainData }> {
   constructor(props) {
@@ -48,6 +49,7 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
             <div className="content">
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
               <Route path="/:name/:animal_type" component={Article}/>
+              <Route path="/login" component={Login}/>
             </div>
           </HashRouter>
         </div>

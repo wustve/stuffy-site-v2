@@ -26,7 +26,7 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
      }
 
      fetchData() {
-          fetch('http://localhost:3000' + '/stuffies/' + this.props.match.params.name.split(' ').join('_') + '/' + 
+          fetch('/stuffies/' + this.props.match.params.name.split(' ').join('_') + '/' + 
                this.props.match.params.animal_type.split(' ').join('_'))
           .then(res => res.json())
           .then(res => this.setState({
