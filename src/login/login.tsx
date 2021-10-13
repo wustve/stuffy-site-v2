@@ -39,7 +39,9 @@ export default class Login extends Component<any, any>{
             .then(res => {
                 this.setState({ status: res });
                 if (res === 'Success') {
+                    this.props.updateLogin(true);
                     this.props.history.push('/');
+                    
                 }
             })
         event.preventDefault();

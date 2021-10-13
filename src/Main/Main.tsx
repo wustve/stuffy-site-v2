@@ -11,28 +11,38 @@ import '@fontsource/merriweather';
 import './colourmode.scss';
 import Login from "../login/login";
 
-export default class Main extends Component<{}, { isLoaded: boolean, error: any, mainData: MainData }> {
+export default class Main extends Component<{}, { isLoaded: boolean, error: any, mainData: MainData, loggedIn: boolean }> {
   constructor(props) {
     super(props);
     this.state = {
       isLoaded: false,
       error: null,
       mainData: null,
+      loggedIn: false,
     }
+
+    this.updateLogin = this.updateLogin.bind(this);
   }
 
   componentDidMount() {
     fetch('http://localhost:3000/menu')
       .then(res => res.json())
-      .then(res => this.setState({
+      .then((res: MainData) => this.setState({
         isLoaded: true,
-        mainData: res
+        mainData: res,
+        loggedIn: res.loggedIn,
       }),
         err => this.setState({
           isLoaded: true,
           error: err,
         })
       );
+  }
+  
+  updateLogin(state: boolean) {
+    this.setState({
+      loggedIn: state,
+    });
   }
 
   render() {
@@ -44,12 +54,12 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
       return (
         <div className="body">
           <HashRouter>
-            <Header stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} />
+            <Header stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} loggedIn = {this.state.loggedIn} updateLogin = {this.updateLogin}/>
             <Menu options={this.state.mainData.options}></Menu>
             <div className="content">
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
               <Route path="/:name/:animal_type" component={Article}/>
-              <Route path="/login" component={Login}/>
+              <Route path="/login" render={props => <Login updateLogin = {this.updateLogin} {...props} />}/>
             </div>
           </HashRouter>
         </div>

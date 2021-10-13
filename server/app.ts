@@ -35,6 +35,7 @@ async function menuRetrieve(req: any): Promise<MainData> {
               stevenStuffy: stevenStuffy,
               monicaStuffy: monicaStuffy,
               options: menuResult,
+              loggedIn: req.session.canEdit,
          }
     }
     catch {
@@ -243,6 +244,11 @@ app.post("/login", [
      else {
           return res.send('Invalid Username or Password')
      }
+})
+
+app.delete('/logout', (req: any,res: any) => {
+     req.session.canEdit = false;
+     res.send();
 })
 
 app.get('*', (req, res) => {
