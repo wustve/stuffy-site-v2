@@ -4,6 +4,7 @@ import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import { LocalStorageKey } from "../enums/LocalStorageKey";
 import { ColourMode } from '../enums/ColourMode'
 import './Header.scss';
+import getLink from "../article/helpers/getlink";
 
 export default class Header extends Component<{
      stevenStuffy: StuffyMenuData,
@@ -21,10 +22,6 @@ export default class Header extends Component<{
                toggleIcon: '\u263E'
           }
           this.logout = this.logout.bind(this);
-     }
-
-     getLink(stuffy: StuffyMenuData) {
-          return ('/' + stuffy.id.toString() + '#active');
      }
 
      logout() {
@@ -83,8 +80,8 @@ export default class Header extends Component<{
                          {this.props.loggedIn ? <a onClick={() => this.logout()}>Logout</a> : <NavLink to='/login'>Login</NavLink>}
                          <NavLink to='/add-stuffy'>Add New Stuffy</NavLink>
                     </div>
-                    <NavLink to={this.getLink(this.props.stevenStuffy)}>Steven's stuffy of the day</NavLink>
-                    <NavLink to={this.getLink(this.props.monicaStuffy)}>Monica's stuffy of the day</NavLink>
+                    <NavLink to={getLink(this.props.stevenStuffy)}>Steven's stuffy of the day</NavLink>
+                    <NavLink to={getLink(this.props.monicaStuffy)}>Monica's stuffy of the day</NavLink>
                     <div id="toggle-housing">
                          <label className="toggle">
                               <input type="checkbox" id="darkLight" checked={this.state.lightMode} onChange={this.handleColourToggle} />

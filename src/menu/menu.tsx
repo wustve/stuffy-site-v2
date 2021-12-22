@@ -2,15 +2,12 @@ import { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import './menu.scss';
+import getLink from "../article/helpers/getlink";
 
 export default class Menu extends Component<{ options: Array<StuffyMenuData> }, { display: Array<StuffyMenuData> }> {
     constructor(props) {
         super(props);
         this.state = { display: this.props.options };
-    }
-
-    getLink(stuffy: StuffyMenuData) {
-        return ('/' + stuffy.id.toString() + '#active');
     }
 
     filter = ({ target }) => {
@@ -33,7 +30,7 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
                     <NavLink exact to='/'>Home</NavLink>
                     {this.state.display.map(stuffy => {
                         let label = stuffy.name + ' (' + stuffy.animal_type + ')';
-                        return <NavLink to={this.getLink(stuffy)}>{label}</NavLink>;
+                        return <NavLink to={getLink(stuffy)}>{label}</NavLink>;
                     })}
                 </div>
             </div>)
