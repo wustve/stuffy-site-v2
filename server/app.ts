@@ -123,8 +123,7 @@ async function manipulateDatabase(req: any, res: any, update: any) {
               return res.send({ msg: "This stuffy already exists!" })
          }
 
-         const newUrl = "/" + req.body.name.replace(/ /g, '_') + '/' + req.body.animalType.replace(/ /g, '_') + "#active"
-         res.send({ msg: 'Success', url: newUrl })
+         res.send({ msg: 'Success' })
     }
     else {
          res.send({ msg: invalidPermissions })
