@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {ArticleData} from "../../interfaces/ArticleData";
 import ArticleSection from "./ArticleSection"
 import './article.scss';
@@ -50,7 +51,9 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
                <div id = "content-wrapper">
                     <div className = "title" id = "main-title">
                          <h1>{this.state.articleData.name}</h1>
-                         <button id = 'edit'>[ Edit ]</button>
+                         <Link to={location => `${location.pathname}/edit`}>
+                              <button id = 'edit'>[ Edit ]</button>
+                         </Link>
                     </div>
                     <div id = "info-wrapper">
                          <div id ="image-div">

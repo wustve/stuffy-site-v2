@@ -5,7 +5,7 @@ import {Route, NavLink} from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import {LocalStorageKey} from "../enums/LocalStorageKey";
 import {ColourMode} from '../enums/ColourMode'
-import './Header.scss';
+import '../header/Header.scss';
 
 export default class StuffyForm extends Component<{isAdd: boolean}, {}> {
 
