@@ -1,21 +1,48 @@
 import React, { Component } from "react";
-import {Route, NavLink, HashRouter} from "react-router-dom";
+import { Route, NavLink, HashRouter } from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
-import {LocalStorageKey} from "../enums/LocalStorageKey";
-import {ColourMode} from '../enums/ColourMode'
+import { LocalStorageKey } from "../enums/LocalStorageKey";
+import { ColourMode } from '../enums/ColourMode'
 import './Header.scss';
 
-export default class Header extends Component<{stevenStuffy: StuffyMenuData, monicaStuffy: StuffyMenuData}, {lightMode: boolean, toggleIcon: string}> {
+export default class Header extends Component<{
+     stevenStuffy: StuffyMenuData,
+     monicaStuffy: StuffyMenuData,
+     loggedIn: boolean,
+     updateLogin: (state: boolean) => void,
+}, {
+     lightMode: boolean,
+     toggleIcon: string
+}> {
      constructor(props: any) {
           super(props);
           this.state = {
                lightMode: false,
                toggleIcon: '\u263E'
           }
+          this.logout = this.logout.bind(this);
      }
+
      getLink(stuffy: StuffyMenuData) {
-          return ('/' + stuffy.name.split(' ').join('_') + '/' + stuffy.animal_type.split(' ').join('_') +'#active');
+          return ('/' + stuffy.name.split(' ').join('_') + '/' + stuffy.animal_type.split(' ').join('_') + '#active');
      }
+
+     logout() {
+          fetch('/logout', {
+               method: 'DELETE',
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+               },
+          })
+          .then(res => {
+               console.log(res)
+               if (res.ok) {
+                    this.props.updateLogin(false);
+               }
+          })
+     }
+
 
      componentDidMount = () => {
           const colourMode = localStorage.getItem(LocalStorageKey.ColourMode);
@@ -25,12 +52,12 @@ export default class Header extends Component<{stevenStuffy: StuffyMenuData, mon
                html.setAttribute(LocalStorageKey.ColourMode, colourMode);
                this.setState({
                     lightMode: colourMode === ColourMode.Light,
-                    toggleIcon: colourMode === ColourMode.Light? '\u263C' : '\u263E'
+                    toggleIcon: colourMode === ColourMode.Light ? '\u263C' : '\u263E'
                });
           }
      }
 
-     handleColourToggle = ({target}) => {
+     handleColourToggle = ({ target }) => {
           let html = document.querySelector("html");
           if (target.checked) {
                html.setAttribute(LocalStorageKey.ColourMode, ColourMode.Light);
@@ -52,16 +79,16 @@ export default class Header extends Component<{stevenStuffy: StuffyMenuData, mon
      render() {
           return (
                <div id="header">
-                    <div id="login-housing"> 
-                         <NavLink to='/login'>Login</NavLink>  
+                    <div id="login-housing">
+                         {this.props.loggedIn ? <a onClick={() => this.logout()}>Logout</a> : <NavLink to='/login'>Login</NavLink>}
                          <NavLink to='/add-stuffy'>Add New Stuffy</NavLink>
                     </div>
                     <NavLink to={this.getLink(this.props.stevenStuffy)}>Steven's stuffy of the day</NavLink>
                     <NavLink to={this.getLink(this.props.monicaStuffy)}>Monica's stuffy of the day</NavLink>
                     <div id="toggle-housing">
                          <label className="toggle">
-                              <input type = "checkbox" id = "darkLight" checked={this.state.lightMode} onChange={this.handleColourToggle}/>
-                              <span id = "slider">{this.state.toggleIcon}</span>
+                              <input type="checkbox" id="darkLight" checked={this.state.lightMode} onChange={this.handleColourToggle} />
+                              <span id="slider">{this.state.toggleIcon}</span>
                          </label>
                     </div>
                </div>
