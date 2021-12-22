@@ -25,7 +25,7 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/menu')
+    fetch('/menu')
       .then(res => res.json())
       .then((res: MainData) => this.setState({
         isLoaded: true,
@@ -58,7 +58,7 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
             <Menu options={this.state.mainData.options}></Menu>
             <div className="content">
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
-              <Route path="/:name/:animal_type" component={Article}/>
+              <Route path="/:id" component={Article}/>
               <Route path="/login" render={props => <Login updateLogin = {this.updateLogin} {...props} />}/>
             </div>
           </HashRouter>

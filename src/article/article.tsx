@@ -19,15 +19,16 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
      }
 
      componentDidUpdate(prevProps) {
-          if (this.props.match.params.name !== prevProps.match.params.name || this.props.match.params.animal_type !== 
-               prevProps.match.params.animal_type) {
+          if (this.props.match.params.id !== prevProps.match.params.id) {
+               this.setState({
+                    isLoaded: false
+               })
                this.fetchData();
           }
      }
 
      fetchData() {
-          fetch('/stuffies/' + this.props.match.params.name.split(' ').join('_') + '/' + 
-               this.props.match.params.animal_type.split(' ').join('_'))
+          fetch('/stuffies/' + this.props.match.params.id)
           .then(res => res.json())
           .then(res => this.setState({
                isLoaded: true,

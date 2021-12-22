@@ -10,7 +10,7 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
     }
 
     getLink(stuffy: StuffyMenuData) {
-        return ('/' + stuffy.name.split(' ').join('_') + '/' + stuffy.animal_type.split(' ').join('_') + '#active');
+        return ('/' + stuffy.id.toString() + '#active');
     }
 
     filter = ({ target }) => {

@@ -24,7 +24,7 @@ export default class Header extends Component<{
      }
 
      getLink(stuffy: StuffyMenuData) {
-          return ('/' + stuffy.name.split(' ').join('_') + '/' + stuffy.animal_type.split(' ').join('_') + '#active');
+          return ('/' + stuffy.id.toString() + '#active');
      }
 
      logout() {
