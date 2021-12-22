@@ -102,23 +102,23 @@ async function manipulateDatabase(req: any, res: any, update: any) {
                let subject : StuffyMenuData = stuffies!.find((stuffy: StuffyMenuData) => (stuffy.id == req.params.id))!;
                if ((subject.name == req.body.name && subject.animal_type == req.body.animalType) || !(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
                     
-                    let sotD = await currentSotD(subject.owner, stuffies);
-                    let query = 'UPDATE stuffies SET name = $1, animal_type = $2, image = $3, name_origin = $4, origin = $5, other_notes = $6 WHERE name = $7 AND animal_type = $8'
-                    let values = [req.body.name, req.body.animalType, req.body.image, req.body.nameOrigin, req.body.origin, req.body.otherNotes, originalName, originalType]
+                    let sotD = (await currentSotD(subject.owner, stuffies))!;
+                    let query = 'UPDATE stuffies SET name = $1, animal_type = $2, image = $3, name_origin = $4, origin = $5, other_notes = $6 WHERE id = $7'
+                    let values = [req.body.name, req.body.animalType, req.body.image, req.body.nameOrigin, req.body.origin, req.body.otherNotes, req.params.id]
                     await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
 
-                    await keepStuffyofTheDayUpdate(sotD.name, sotD.animal_type, originalName, originalType, owner, req.body.name, req.body.animalType)
+                    await keepStuffyofTheDayUpdate(sotD.id, subject.owner)
                } else {
                     return res.send({ msg: "Another stuffy of the same name already exists!" })
                }
          }
          else if (!(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
-              var sotD = await currentSotD(req.body.owner, stuffies)
+              var sotD = (await currentSotD(req.body.owner, stuffies))!;
 
               var query = 'INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) VALUES ($1, $2, $3, $4, $5, $6, $7)'
               var values = [req.body.name, req.body.animalType, req.body.image, req.body.owner, req.body.nameOrigin, req.body.origin, req.body.otherNotes]
               await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
-              await keepStuffyofTheDay(sotD.name, sotD.animal_type, req.body.owner)
+              await keepStuffyofTheDay(sotD.id, req.body.owner)
          } else {
               return res.send({ msg: "This stuffy already exists!" })
          }
@@ -161,30 +161,24 @@ async function isInvalid(req: any) {
 }
 
 
-async function keepStuffyofTheDayUpdate(sotdName: string, sotdType: string, oldName: string, oldType: string, owner: string, newName: string, newType: string) {
+async function keepStuffyofTheDayUpdate(id: number, owner: string) {
     if (owner !== "Steven" && owner !== "Monica") {
-         return;
+          return;
     }
     else {
-         console.log("adjustment needed")
-         if (((oldName === sotdName) && (sotdType === oldType))){
-              await keepStuffyofTheDay(newName, newType, owner)
-         } else{
-              await keepStuffyofTheDay(sotdName, sotdType, owner)
-         }
+          console.log("adjustment needed")
+          await keepStuffyofTheDay(id, owner);
     }
 }
 
-async function keepStuffyofTheDay(sotdName: string, sotdType: string, owner: string) {
+async function keepStuffyofTheDay(id : number, owner: string) {
     if (owner !== "Steven" && owner !== "Monica") {
-         return
+         return;
     }
     const stuffies = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT id, name, animal_type FROM stuffies WHERE owner = $1 ORDER BY name, animal_type ASC;", [owner])
-    const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.name == sotdName && stuffy.animal_type == sotdType))
+    const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.id == id));
 
     console.log(stuffies)
-    console.log (sotdName)
-    console.log(sotdType)
     console.log(offset)
     console.log(owner)
 
