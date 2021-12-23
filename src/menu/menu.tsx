@@ -9,6 +9,10 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
         this.state = { display: this.props.options };
     }
 
+    componentWillReceiveProps(nextProps: Readonly<{ options: Array<StuffyMenuData>; }>, nextContext: any): void {
+        this.state = { display: nextProps.options };
+    }
+
     getLink(stuffy: StuffyMenuData) {
         return ('/' + stuffy.name.split(' ').join('_') + '/' + stuffy.animal_type.split(' ').join('_') + '#active');
     }
@@ -20,7 +24,6 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
         } else {
             let query = target.value.toLowerCase();
             this.setState({ display: this.props.options.filter(stuffy => (stuffy.name + stuffy.animal_type).toLowerCase().includes(query)) });
-            console.log(this.state.display)
         }
     }
 

@@ -60,10 +60,6 @@ async function stuffyOfTheDay(stuffies: any) {
     let dateDifferenceMonica = Math.floor((currentDate.valueOf() - anchorDateMonica) / (1000 * 60 * 60 * 24)) % monicaStuffies.length
     let stevenStuffy = stevenStuffies[dateDifferenceSteven]
     let monicaStuffy = monicaStuffies[dateDifferenceMonica]
-    //console.log(anchorDateMonica)
-    //console.log(monicaStuffies)
-    console.log(dateDifferenceMonica)
-    console.log(monicaStuffy)
     return [stevenStuffy, monicaStuffy]
 }
 
@@ -138,7 +134,6 @@ async function currentSotD(owner: string, stuffies: Array<any>) {
     let stevenStuffy, monicaStuffy
     [stevenStuffy, monicaStuffy] = await stuffyOfTheDay(stuffies)
     var stuffyName, stuffyType
-    console.log(owner)
     if (owner == "Steven") {
          stuffyName = stevenStuffy.name
          stuffyType = stevenStuffy.animal_type
@@ -172,7 +167,6 @@ async function keepStuffyofTheDayUpdate(sotdName: string, sotdType: string, oldN
          return
     }
     else {
-         console.log("adjustment needed")
          if (((oldName === sotdName) && (sotdType === oldType))){
               await keepStuffyofTheDay(newName, newType, owner)
          } else{
@@ -195,17 +189,9 @@ async function keepStuffyofTheDay(sotdName: string, sotdType: string, owner: str
     const stuffies = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT name, animal_type FROM stuffies WHERE owner = $1 ORDER BY name, animal_type ASC;", [owner])
     const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.name == sotdName && stuffy.animal_type == sotdType))
 
-    console.log(stuffies)
-    console.log (sotdName)
-    console.log(sotdType)
-    console.log(offset)
-    console.log(owner)
-
-
     var today = getCurrentDate()
     var anchor: any = today.minus({ days: offset })
     anchor = anchor.toISODate()
-    console.log(anchor)
     await new DatabaseController(process.env.DATABASE_URL!).command("UPDATE anchordates SET date = $1 WHERE person = $2;", [anchor, owner])
 }
 

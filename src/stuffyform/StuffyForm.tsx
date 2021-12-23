@@ -14,13 +14,13 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      constructor(props: any) {
           super(props);
           this.state = {
-               name : (typeof props.articleData !== 'undefined') ? props.articleData.name : "",
-               image : (typeof props.articleData !== 'undefined') ? props.articleData.image : "",
-               owner : (typeof props.articleData !== 'undefined') ? props.articleData.owner : "", 
-               animalType : (typeof props.articleData !== 'undefined') ? props.articleData.animal_type : "", 
-               nameOrigin : (typeof props.articleData !== 'undefined') ? props.articleData.name_origin : "", 
-               origin : (typeof props.articleData !== 'undefined') ? props.articleData.origin : "", 
-               otherNotes : (typeof props.articleData !== 'undefined') ? props.articleData.other_notes : "",
+               name : props.articleData ? props.articleData.name : "",
+               image : props.articleData ? props.articleData.image : "",
+               owner : props.articleData ? props.articleData.owner : "", 
+               animalType : props.articleData ? props.articleData.animal_type : "", 
+               nameOrigin : props.articleData ? props.articleData.name_origin : "", 
+               origin : props.articleData ? props.articleData.origin : "", 
+               otherNotes : props.articleData ? props.articleData.other_notes : "",
                status : ""
           };
           this.handleChange = this.handleChange.bind(this);
@@ -45,7 +45,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      }
 
      afterSubmit(url : string) {
-          this.props.exitSuccess();
+          this.props.exitSuccess(url);
           // get menu to refetch data
      }
 
@@ -104,32 +104,32 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                     <form autoComplete = "off" onSubmit={this.handleSubmit}>
                          <label className= 'required'>
                               Name
-                              <input {...this.generateInputProps("name", this.state.name)} required/>
                          </label>
+                         <input {...this.generateInputProps("name", this.state.name)} required/>
                          <label className= 'required'>
                               Image Link
-                              <input {...this.generateInputProps("image", this.state.image)} required/>
                          </label>
+                         <input {...this.generateInputProps("image", this.state.image)} required/>
                          <label className= 'required'>
                               Owner
-                              <OwnerInput isAdd={this.props.isAdd} value = {this.state.owner} onChangeFunc = {this.handleChange}/>
                          </label>
+                         <OwnerInput isAdd={this.props.isAdd} value = {this.state.owner} onChangeFunc = {this.handleChange}/>
                          <label className= 'required'>
                               Animal Type
-                              <input {...this.generateInputProps("animalType", this.state.animalType)} required/>
                          </label>
+                         <input {...this.generateInputProps("animalType", this.state.animalType)} required/>
                          <label>
                               Name Origin 
-                              <textarea {...this.generateTextAreaProps("nameOrigin")}>{this.state.nameOrigin}</textarea>
                          </label>
+                         <textarea {...this.generateTextAreaProps("nameOrigin")}>{this.state.nameOrigin}</textarea>
                          <label>
                               Origin
-                              <textarea {...this.generateTextAreaProps("origin")}>{this.state.origin}</textarea>
                          </label>
+                         <textarea {...this.generateTextAreaProps("origin")}>{this.state.origin}</textarea>
                          <label>
                               Other Notes
-                              <textarea {...this.generateTextAreaProps("otherNotes")}>{this.state.otherNotes}</textarea>
                          </label>
+                         <textarea {...this.generateTextAreaProps("otherNotes")}>{this.state.otherNotes}</textarea>
                          <div id = 'status'><p>{this.state.status}</p></div>
                          <input type = "submit" value = "Submit" id = "submit"/>
                          <DeleteButton isAdd={this.props.isAdd} onClick={this.handleDelete}/>

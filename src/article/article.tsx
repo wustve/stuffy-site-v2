@@ -5,7 +5,7 @@ import ArticleSection from "./ArticleSection"
 import StuffyForm from "../stuffyform/StuffyForm"
 import './article.scss';
 
-export default class Article extends Component<{match: any}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
+export default class Article extends Component<{match: any, history: any, fetchMenu: any}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
      constructor(props) {
           super(props);
           this.state = {
@@ -59,9 +59,11 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
           });
      }
 
-     exitEditModeSuccess() {
-          this.fetchData();
+     exitEditModeSuccess(url: string) {
+          this.props.fetchMenu();
+          this.props.history.push(url);
           this.exitEditMode();
+          this.fetchData();
      }
 
      render() {
