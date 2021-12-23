@@ -77,13 +77,10 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                     origin : this.state.origin,
                     otherNotes : this.state.otherNotes,
               })
-          }).then((res : any) => {
-               res = res.json();
-               console.log(res.msg);
-               return res
-          }).then((res : any) => {
-              console.log(res);
-              this.setState({status : res});
+          }).then((res : any) => res.json())
+          .then((res : any) => {
+              console.log(res.msg);
+              this.setState({status : res.msg});
               if (res === 'Success') {
                    console.log("success");
               }
