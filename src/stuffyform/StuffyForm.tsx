@@ -9,7 +9,7 @@ import {LocalStorageKey} from "../enums/LocalStorageKey";
 import {ColourMode} from '../enums/ColourMode'
 import '../header/Header.scss';
 
-export default class StuffyForm extends Component<{path : string, isAdd: boolean, exitSuccess? : any, exit? : any, articleData?: ArticleData}, any> {
+export default class StuffyForm extends Component<{path : string, isAdd: boolean, exitSuccess : any, exit? : any, articleData?: ArticleData}, any> {
 
      constructor(props: any) {
           super(props);
@@ -25,6 +25,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
           };
           this.handleChange = this.handleChange.bind(this);
           this.handleSubmit = this.handleSubmit.bind(this);
+          this.handleDelete = this.handleDelete.bind(this);
      }
 
      generateInputProps(inputName : string, inputVal? : string) {
@@ -41,6 +42,11 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
           var props = {isAdd : this.props.isAdd};
           var exitFunc = (typeof this.props.exit !== 'undefined') ? {exit : this.props.exit} : {};
           return {...props, ...exitFunc};
+     }
+
+     afterSubmit(url : string) {
+          this.props.exitSuccess();
+          // get menu to refetch data
      }
 
      handleChange(event : any) {
@@ -72,10 +78,24 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
           .then((res : any) => {
               this.setState({status : res.msg});
               if (res.msg === 'Success') {
-                   this.props.exitSuccess();
+                   this.afterSubmit(res.url);
               }
          })
          event.preventDefault();
+     }
+
+     handleDelete(event : any) {
+          fetch(this.props.path, {
+               method: 'DELETE'
+          })
+          .then(res => res.text())
+          .then(res => {
+               this.setState({status : res});
+               if (res === 'Success') {
+                    this.afterSubmit('/');
+               }
+          })
+          event.preventDefault();
      }
 
      render() {
@@ -112,7 +132,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                          </label>
                          <div id = 'status'><p>{this.state.status}</p></div>
                          <input type = "submit" value = "Submit" id = "submit"/>
-                         <DeleteButton isAdd={this.props.isAdd}/>
+                         <DeleteButton isAdd={this.props.isAdd} onClick={this.handleDelete}/>
                          <CancelButton {...this.generateCancelButtonProps()}/>
                     </form>
                     <p id = "form-disclaimer"><span style = {{color: "red"}}>*</span> indicates a required field</p>

@@ -283,6 +283,31 @@ app.delete('/logout', (req: any,res: any) => {
      res.send();
 })
 
+app.delete("/:stuffyName/:animalType", async (req:any, res:any) => {
+     var stuffies:any = await new DatabaseController(process.env.DATABASE_URL!).menuResult()
+     if (req.session.canEdit) {
+          const name = req.params.stuffyName.replace(/_/g, ' ')
+          const type = req.params.animalType.replace(/_/g, ' ')
+          const values = [name,type]
+          
+          const owner = stuffies.find((stuffy:any) => (stuffy.name == name && stuffy.animal_type == type)).owner
+          const sotD = await currentSotD(owner, stuffies)
+          console.log(sotD)
+          if (sotD.name == name && sotD.animal_type == type){
+               await keepStuffyofTheDay(sotD.name, sotD.animal_type, owner)
+          }
+          await new DatabaseController(process.env.DATABASE_URL!).command("DELETE from stuffies where name = $1 AND animal_type = $2", values)
+          if (sotD.name !== name || sotD.animal_type !== type){
+               await keepStuffyofTheDay(sotD.name, sotD.animal_type, owner)
+          }
+
+
+          res.send("Success")
+     } else {
+          res.send(invalidPermissions)
+     }
+})
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'));
  });

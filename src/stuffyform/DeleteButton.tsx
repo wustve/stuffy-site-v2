@@ -1,9 +1,9 @@
-export default function DeleteButton(props: {isAdd:boolean}) {
+export default function DeleteButton(props: {isAdd:boolean, onClick:any}) {
      if (props.isAdd) {
           return null;
      } else {
           return (
-               <button type = "button" id = 'deleteStuffy'>Delete</button>
+               <button type = "button" id = 'deleteStuffy' onClick = {props.onClick}>Delete</button>
           );
      }
 }
