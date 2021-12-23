@@ -62,7 +62,6 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
               <Route exact path="/:name/:animal_type" component={Article}/>
               <Route path="/add-stuffy" component={Add}/>
-              <Route path="/:name/:animal_type/edit" component={Edit}/>
               <Route path="/login" render={props => <Login updateLogin = {this.updateLogin} {...props} />}/>
             </div>
           </HashRouter>

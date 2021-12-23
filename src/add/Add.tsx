@@ -10,9 +10,13 @@ export default class Add extends Component<{}, {}> {
           super(props);
      }
 
+     generateEmptyData() {
+          return {name: "", animal_type: "", image: "", owner: "", name_origin: "", origin: "", other_notes: ""}  
+     }
+
      render() {
           return (
-               <StuffyForm isAdd={true} />
+               <StuffyForm isAdd={true} articleData={this.generateEmptyData()} exit={() => {window.location.href='/home';}}/>
           );
      }
 }

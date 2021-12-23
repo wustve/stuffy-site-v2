@@ -2,17 +2,21 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {ArticleData} from "../../interfaces/ArticleData";
 import ArticleSection from "./ArticleSection"
+import StuffyForm from "../stuffyform/StuffyForm"
 import './article.scss';
 
-export default class Article extends Component<{match: any}, {isLoaded: boolean, error: any, articleData: ArticleData}> {
+export default class Article extends Component<{match: any}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
      constructor(props) {
           super(props);
           this.state = {
                isLoaded: false,
                error: null,
                articleData: null,
+               isEditMode: false
           }
           this.fetchData = this.fetchData.bind(this);
+          this.enterEditMode = this.enterEditMode.bind(this);
+          this.exitEditMode = this.exitEditMode.bind(this);
      }
 
      componentDidMount() {
@@ -41,19 +45,31 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
           );
      }
 
+     enterEditMode() {
+          this.setState({
+               isEditMode : true
+          });
+     }
+
+     exitEditMode() {
+          this.setState({
+               isEditMode : false
+          });
+     }
+
      render() {
           if (this.state.error) {
                return <div className="body">error {this.state.error.message}</div>;
           } else if (!this.state.isLoaded) {
                return <div className="body">loading</div>;
+          } else if (this.state.isEditMode) {
+               return (<StuffyForm isAdd={false} articleData={this.state.articleData} exit={this.exitEditMode}/>);
           } else {
-               return(
+               return (
                <div id = "content-wrapper">
                     <div className = "title" id = "main-title">
                          <h1>{this.state.articleData.name}</h1>
-                         <Link to={location => `${location.pathname}/edit`}>
-                              <button id = 'edit'>[ Edit ]</button>
-                         </Link>
+                         <button id = 'edit' onClick = {this.enterEditMode}>[ Edit ]</button>
                     </div>
                     <div id = "info-wrapper">
                          <div id ="image-div">

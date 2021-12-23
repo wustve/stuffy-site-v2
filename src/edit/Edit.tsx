@@ -8,9 +8,9 @@ export default class Edit extends Component<{}, {}> {
           super(props);
      }
 
-     render() {
+     /*render() {
           return (
                <StuffyForm isAdd={false} />
           );
-     }
+     }*/
 }
