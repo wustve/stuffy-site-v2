@@ -6,6 +6,8 @@ import Header from "../header/Header";
 import Article from "../article/article";
 import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
+import Add from "../add/Add";
+import Edit from "../edit/Edit";
 import './Main.scss'
 import '@fontsource/merriweather';
 import './colourmode.scss';
@@ -24,8 +26,8 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
     this.updateLogin = this.updateLogin.bind(this);
   }
 
-  componentDidMount() {
-    fetch('http://localhost:3000/menu')
+  fetchMenu = () => {
+    fetch('/menu')
       .then(res => res.json())
       .then((res: MainData) => this.setState({
         isLoaded: true,
@@ -37,6 +39,10 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
           error: err,
         })
       );
+  }
+
+  componentDidMount() {
+    this.fetchMenu();
   }
   
   updateLogin(state: boolean) {
@@ -58,7 +64,8 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
             <Menu options={this.state.mainData.options}></Menu>
             <div className="content">
               <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
-              <Route path="/:name/:animal_type" component={Article}/>
+              <Route exact path="/:name/:animal_type" render={props => <Article fetchMenu={this.fetchMenu}{...props}></Article>}/>
+              <Route path="/add-stuffy" render={props => <Add fetchMenu={this.fetchMenu} {...props}></Add>}/>
               <Route path="/login" render={props => <Login updateLogin = {this.updateLogin} {...props} />}/>
             </div>
           </HashRouter>

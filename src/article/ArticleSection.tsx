@@ -1,8 +1,6 @@
 import React from "react";
 
 export default function ArticleSection(props) {
-     console.log(props.title);
-     console.log(props.content);
      if (!props.content) {
           return null;
      } else {
