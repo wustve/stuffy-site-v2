@@ -5,7 +5,7 @@ export default function OwnerInput(props: {isAdd : boolean, value : string, onCh
           );
      } else {
           return (
-               <input type = "text" id = "owner-input" name = "owner" value = {props.value} disabled/>
+               <input type = "text" id = "owner-input" name = "owner" value = {props.value} style={{cursor: "not-allowed"}} disabled/>
           );
      }
 }
