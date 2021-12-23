@@ -63,8 +63,10 @@ export default class Article extends Component<{match: any, history: any, fetchM
      exitEditModeSuccess(url: string) {
           this.props.fetchMenu();
           this.props.history.push(url);
-          this.exitEditMode();
-          this.fetchData();
+          if (url !== "/") {
+               this.exitEditMode();
+               this.fetchData();
+          }
      }
 
      render() {
