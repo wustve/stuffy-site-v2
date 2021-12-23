@@ -27,6 +27,7 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
           if (this.props.match.params.name !== prevProps.match.params.name || this.props.match.params.animal_type !== 
                prevProps.match.params.animal_type) {
                this.fetchData();
+               this.exitEditMode();
           }
      }
 
