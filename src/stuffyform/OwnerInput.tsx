@@ -1,7 +1,7 @@
-export default function OwnerInput(props: {isAdd : boolean, value : string}) {
+export default function OwnerInput(props: {isAdd : boolean, value : string, onChangeFunc : any}) {
      if (props.isAdd) {
           return (
-               <input type = "text" id = "owner-input" name = "owner" required/>
+               <input type = "text" id = "owner-input" name = "owner" onChange = {props.onChangeFunc} required/>
           );
      } else {
           return (

@@ -53,15 +53,6 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      }
 
      handleSubmit(event : any) {
-          console.log("body " + JSON.stringify({
-               name : this.state.name,
-               image : this.state.image,
-               owner : this.state.owner, 
-               animalType : this.state.animalType, 
-               nameOrigin : this.state.nameOrigin,
-               origin : this.state.origin,
-               otherNotes : this.state.otherNotes,
-         }));
           fetch(this.props.path, {
                method: 'POST',
                headers: {
@@ -79,10 +70,9 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
               })
           }).then((res : any) => res.json())
           .then((res : any) => {
-              console.log(res.msg);
               this.setState({status : res.msg});
-              if (res === 'Success') {
-                   console.log("success");
+              if (res.msg === 'Success') {
+                   this.props.exitSuccess();
               }
          })
          event.preventDefault();
@@ -102,7 +92,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                          </label>
                          <label className= 'required'>
                               Owner
-                              <OwnerInput isAdd={this.props.isAdd} value = {this.props.articleData.owner}/>
+                              <OwnerInput isAdd={this.props.isAdd} value = {this.state.owner} onChangeFunc = {this.handleChange}/>
                          </label>
                          <label className= 'required'>
                               Animal Type

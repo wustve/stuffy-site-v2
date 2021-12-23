@@ -17,6 +17,7 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
           this.fetchData = this.fetchData.bind(this);
           this.enterEditMode = this.enterEditMode.bind(this);
           this.exitEditMode = this.exitEditMode.bind(this);
+          this.exitEditModeSuccess = this.exitEditModeSuccess.bind(this);
      }
 
      componentDidMount() {
