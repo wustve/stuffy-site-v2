@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import OwnerInput from "./OwnerInput"
-import FormInput from "./FormInput"
-import FormTextArea from "./FormTextArea"
 import DeleteButton from "./DeleteButton"
 import {ArticleData} from "../../interfaces/ArticleData";
 import {Route, NavLink} from "react-router-dom";
@@ -10,14 +8,20 @@ import {LocalStorageKey} from "../enums/LocalStorageKey";
 import {ColourMode} from '../enums/ColourMode'
 import '../header/Header.scss';
 
-export default class StuffyForm extends Component<{isAdd: boolean, articleData: ArticleData, exit : any}> {
+export default class StuffyForm extends Component<{isAdd: boolean, exit : any, articleData?: ArticleData}> {
 
      constructor(props: any) {
           super(props);
      }
 
-     cancelEdit() {
-          //TODO: write this function that sends user to article page or homepage
+     generateInputProps(inputName : string, inputVal? : string) {
+          var props = {type : "text", id : inputName + "-input", name : inputName};
+          var value = (inputVal !== "") ? {value : inputVal} : {};
+          return {...props, ...value};
+     }
+
+     generateTextAreaProps(inputName : string) {
+          return {id : inputName + "-input", name : inputName};
      }
 
      render() {
@@ -26,11 +30,11 @@ export default class StuffyForm extends Component<{isAdd: boolean, articleData: 
                     <form autoComplete = "off">
                          <label className= 'required'>
                               Name
-                              <FormInput inputName = "name" inputVal = {this.props.articleData.name} required = {true}/>
+                              <input {...this.generateInputProps("name", (typeof this.props.articleData !== 'undefined') ? this.props.articleData.name : "")} required/>
                          </label>
                          <label className= 'required'>
                               Image Link
-                              <FormInput inputName = "image" inputVal = {this.props.articleData.image} required = {true}/>
+                              <input {...this.generateInputProps("image", (typeof this.props.articleData !== 'undefined') ? this.props.articleData.image : "")} required/>
                          </label>
                          <label className= 'required'>
                               Owner
@@ -38,19 +42,19 @@ export default class StuffyForm extends Component<{isAdd: boolean, articleData: 
                          </label>
                          <label className= 'required'>
                               Animal Type
-                              <input type = "text" id = "animalType-input" name = "animalType" required/>
+                              <input {...this.generateInputProps("animalType", (typeof this.props.articleData !== 'undefined') ? this.props.articleData.animal_type : "")} required/>
                          </label>
                          <label>
                               Name Origin 
-                              <FormTextArea inputName = "nameOrigin" inputVal = {this.props.articleData.name_origin} required = {false}/>
+                              <textarea {...this.generateTextAreaProps("nameOrigin")}>{(typeof this.props.articleData !== 'undefined') ? this.props.articleData.name_origin : ""}</textarea>
                          </label>
                          <label>
                               Origin
-                              <textarea id = "origin-input" name = "origin"></textarea>
+                              <textarea {...this.generateTextAreaProps("origin")}>{(typeof this.props.articleData !== 'undefined') ? this.props.articleData.origin : ""}</textarea>
                          </label>
                          <label>
                               Other Notes
-                              <textarea id = "otherNotes-input" name = "otherNotes"></textarea>
+                              <textarea {...this.generateTextAreaProps("otherNotes")}>{(typeof this.props.articleData !== 'undefined') ? this.props.articleData.other_notes : ""}</textarea>
                          </label>
                          <div id = 'status'></div>
                          <input type = "submit" value = "Submit" id = "submit"/>
