@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {ArticleData} from "../../interfaces/ArticleData";
 import ArticleSection from "./ArticleSection"
 import './article.scss';
+import Image from "../image/image";
 
 export default class Article extends Component<{match: any}, {isLoaded: boolean, error: any, articleData: ArticleData}> {
      constructor(props) {
@@ -53,9 +54,7 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
                          <button id = 'edit'>[ Edit ]</button>
                     </div>
                     <div id = "info-wrapper">
-                         <div id ="image-div">
-                              <img src={this.state.articleData.image} className = "thumbnail"/>
-                         </div>
+                         <Image src = {this.state.articleData.image}></Image>
                          <div id = "paragraphs">
                               <ArticleSection title='Owner' content={this.state.articleData.owner}/>
                               <ArticleSection title='Animal Type' content={this.state.articleData.animal_type}/>
