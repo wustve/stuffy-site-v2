@@ -58,13 +58,18 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
           });
      }
 
+     exitEditModeSuccess() {
+          this.fetchData();
+          this.exitEditMode();
+     }
+
      render() {
           if (this.state.error) {
                return <div className="body">error {this.state.error.message}</div>;
           } else if (!this.state.isLoaded) {
                return <div className="body">loading</div>;
           } else if (this.state.isEditMode) {
-               return (<StuffyForm isAdd={false} articleData={this.state.articleData} exit={this.exitEditMode}/>);
+               return (<StuffyForm path={this.props.match.url} isAdd={false} articleData={this.state.articleData} exitSuccess={this.exitEditModeSuccess} exit={this.exitEditMode}/>);
           } else {
                return (
                <div id = "content-wrapper">

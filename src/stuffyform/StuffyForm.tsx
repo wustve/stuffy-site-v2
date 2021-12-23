@@ -3,13 +3,13 @@ import OwnerInput from "./OwnerInput"
 import DeleteButton from "./DeleteButton"
 import CancelButton from "./CancelButton"
 import {ArticleData} from "../../interfaces/ArticleData";
-import {Route, NavLink} from "react-router-dom";
+import {Route, NavLink, useRouteMatch} from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import {LocalStorageKey} from "../enums/LocalStorageKey";
 import {ColourMode} from '../enums/ColourMode'
 import '../header/Header.scss';
 
-export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, articleData?: ArticleData}, any> {
+export default class StuffyForm extends Component<{path : string, isAdd: boolean, exitSuccess? : any, exit? : any, articleData?: ArticleData}, any> {
 
      constructor(props: any) {
           super(props);
@@ -17,10 +17,10 @@ export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, 
                name : (typeof props.articleData !== 'undefined') ? props.articleData.name : "",
                image : (typeof props.articleData !== 'undefined') ? props.articleData.image : "",
                owner : (typeof props.articleData !== 'undefined') ? props.articleData.owner : "", 
-               animal_type : (typeof props.articleData !== 'undefined') ? props.articleData.animal_type : "", 
-               name_origin : (typeof props.articleData !== 'undefined') ? props.articleData.name_origin : "", 
+               animalType : (typeof props.articleData !== 'undefined') ? props.articleData.animal_type : "", 
+               nameOrigin : (typeof props.articleData !== 'undefined') ? props.articleData.name_origin : "", 
                origin : (typeof props.articleData !== 'undefined') ? props.articleData.origin : "", 
-               other_notes : (typeof props.articleData !== 'undefined') ? props.articleData.string : "",
+               otherNotes : (typeof props.articleData !== 'undefined') ? props.articleData.other_notes : "",
                status : ""
           };
           this.handleChange = this.handleChange.bind(this);
@@ -28,13 +28,13 @@ export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, 
      }
 
      generateInputProps(inputName : string, inputVal? : string) {
-          var props = {type : "text", id : inputName + "-input", name : inputName};
+          var props = {type : "text", id : inputName + "-input", name : inputName, onChange : this.handleChange};
           var value = (inputVal !== "") ? {value : inputVal} : {};
           return {...props, ...value};
      }
 
      generateTextAreaProps(inputName : string) {
-          return {id : inputName + "-input", name : inputName};
+          return {id : inputName + "-input", name : inputName, onChange : this.handleChange};
      }
 
      generateCancelButtonProps() {
@@ -53,20 +53,40 @@ export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, 
      }
 
      handleSubmit(event : any) {
-          fetch(location.href, {
+          console.log("body " + JSON.stringify({
+               name : this.state.name,
+               image : this.state.image,
+               owner : this.state.owner, 
+               animalType : this.state.animalType, 
+               nameOrigin : this.state.nameOrigin,
+               origin : this.state.origin,
+               otherNotes : this.state.otherNotes,
+         }));
+          fetch(this.props.path, {
                method: 'POST',
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+               },
                body: JSON.stringify({
                     name : this.state.name,
                     image : this.state.image,
                     owner : this.state.owner, 
-                    animal_type : this.state.animal_type, 
-                    name_origin : this.state.name_origin,
+                    animalType : this.state.animalType, 
+                    nameOrigin : this.state.nameOrigin,
                     origin : this.state.origin,
-                    other_notes : this.state.other_notes
+                    otherNotes : this.state.otherNotes,
               })
-         }).then(res => res.text())
-         .then(res => {
+          }).then((res : any) => {
+               res = res.json();
+               console.log(res.msg);
+               return res
+          }).then((res : any) => {
+              console.log(res);
               this.setState({status : res});
+              if (res === 'Success') {
+                   console.log("success");
+              }
          })
          event.preventDefault();
      }
@@ -74,7 +94,7 @@ export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, 
      render() {
           return (
                <div id = "form">
-                    <form autoComplete = "off">
+                    <form autoComplete = "off" onSubmit={this.handleSubmit}>
                          <label className= 'required'>
                               Name
                               <input {...this.generateInputProps("name", this.state.name)} required/>
@@ -89,11 +109,11 @@ export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, 
                          </label>
                          <label className= 'required'>
                               Animal Type
-                              <input {...this.generateInputProps("animal_type", this.state.animal_type)} required/>
+                              <input {...this.generateInputProps("animalType", this.state.animalType)} required/>
                          </label>
                          <label>
                               Name Origin 
-                              <textarea {...this.generateTextAreaProps("name_origin")}>{this.state.name_origin}</textarea>
+                              <textarea {...this.generateTextAreaProps("nameOrigin")}>{this.state.nameOrigin}</textarea>
                          </label>
                          <label>
                               Origin
@@ -101,7 +121,7 @@ export default class StuffyForm extends Component<{isAdd: boolean, exit? : any, 
                          </label>
                          <label>
                               Other Notes
-                              <textarea {...this.generateTextAreaProps("other_notes")}>{this.state.other_notes}</textarea>
+                              <textarea {...this.generateTextAreaProps("otherNotes")}>{this.state.otherNotes}</textarea>
                          </label>
                          <div id = 'status'><p>{this.state.status}</p></div>
                          <input type = "submit" value = "Submit" id = "submit"/>

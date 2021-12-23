@@ -98,7 +98,6 @@ async function manipulateDatabase(req: any, res: any, update: any) {
 
     if (req.session.canEdit) {
          var stuffies:any = await new DatabaseController(process.env.DATABASE_URL!).menuResult()
-         stuffies = stuffies.rows
          if (update) {
               const originalName = req.params.stuffyName.replace(/_/g, ' ')
               const originalType = req.params.stuffyType.replace(/_/g, ' ')
@@ -127,7 +126,7 @@ async function manipulateDatabase(req: any, res: any, update: any) {
          }
 
          const newUrl = "/" + req.body.name.replace(/ /g, '_') + '/' + req.body.animalType.replace(/ /g, '_') + "#active"
-         res.send({ msg: 'Success', url: newUrl })
+         res.json({ msg: 'Success', url: newUrl })
     }
     else {
          res.send({ msg: invalidPermissions })
