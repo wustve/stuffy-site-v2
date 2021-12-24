@@ -31,6 +31,10 @@
     width: 27vw;
     padding: 1vw;
     box-sizing: border-box;
+    h3 {
+        margin-bottom: 0;
+    }
+    padding-bottom: 0;
 }
 
 .stuffyOfTheDay h2{
@@ -39,9 +43,11 @@
 }
 
 .stuffyOfTheDayPic {
+    position:relative;
     display:flex;
     justify-content: center;
     object-fit: contain;
     height: 25vw;
     width: 25vw;
+    padding: 0;
 }

@@ -1,17 +1,24 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {ArticleData} from "../../interfaces/ArticleData";
 import ArticleSection from "./ArticleSection"
+import StuffyForm from "../stuffyform/StuffyForm"
 import './article.scss';
+import Image from "../image/image";
 
-export default class Article extends Component<{match: any}, {isLoaded: boolean, error: any, articleData: ArticleData}> {
+export default class Article extends Component<{match: any, history: any, fetchMenu: any}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
      constructor(props) {
           super(props);
           this.state = {
                isLoaded: false,
                error: null,
                articleData: null,
+               isEditMode: false
           }
           this.fetchData = this.fetchData.bind(this);
+          this.enterEditMode = this.enterEditMode.bind(this);
+          this.exitEditMode = this.exitEditMode.bind(this);
+          this.exitEditModeSuccess = this.exitEditModeSuccess.bind(this);
      }
 
      componentDidMount() {
@@ -24,6 +31,7 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
                     isLoaded: false
                })
                this.fetchData();
+               this.exitEditMode();
           }
      }
 
@@ -41,22 +49,43 @@ export default class Article extends Component<{match: any}, {isLoaded: boolean,
           );
      }
 
+     enterEditMode() {
+          this.setState({
+               isEditMode : true
+          });
+     }
+
+     exitEditMode() {
+          this.setState({
+               isEditMode : false
+          });
+     }
+
+     exitEditModeSuccess(url: string) {
+          this.props.fetchMenu();
+          this.props.history.push(url);
+          if (url !== "/") {
+               this.exitEditMode();
+               this.fetchData();
+          }
+     }
+
      render() {
           if (this.state.error) {
                return <div className="body">error {this.state.error.message}</div>;
           } else if (!this.state.isLoaded) {
                return <div className="body">loading</div>;
+          } else if (this.state.isEditMode) {
+               return (<StuffyForm path={this.props.match.url} isAdd={false} articleData={this.state.articleData} exitSuccess={this.exitEditModeSuccess} exit={this.exitEditMode}/>);
           } else {
-               return(
+               return (
                <div id = "content-wrapper">
                     <div className = "title" id = "main-title">
                          <h1>{this.state.articleData.name}</h1>
-                         <button id = 'edit'>[ Edit ]</button>
+                         <button id = 'edit' onClick = {this.enterEditMode}>[ Edit ]</button>
                     </div>
                     <div id = "info-wrapper">
-                         <div id ="image-div">
-                              <img src={this.state.articleData.image} className = "thumbnail"/>
-                         </div>
+                         <Image src = {this.state.articleData.image}></Image>
                          <div id = "paragraphs">
                               <ArticleSection title='Owner' content={this.state.articleData.owner}/>
                               <ArticleSection title='Animal Type' content={this.state.articleData.animal_type}/>

@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@fontsource/merriweather": "^4.5.1",
+    "@mui/material": "^5.2.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
