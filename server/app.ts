@@ -103,9 +103,7 @@ async function manipulateDatabase(req: any, res: any, update: boolean) {
                     let query = 'UPDATE stuffies SET name = $1, animal_type = $2, image = $3, name_origin = $4, origin = $5, other_notes = $6 WHERE id = $7'
                     let values = [req.body.name, req.body.animalType, req.body.image, req.body.nameOrigin, req.body.origin, req.body.otherNotes, req.params.id]
                     await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
-                    if (sotD) {
-                         await keepStuffyofTheDay(sotD, subject.owner);
-                    }
+                    await keepStuffyofTheDay(sotD, subject.owner);
                     
                } else {
                     return res.send({ msg: "Another stuffy of the same name already exists!" })
