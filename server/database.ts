@@ -27,7 +27,7 @@ export default class DatabaseController {
           }
      }
      async menuResult(): Promise<Array<StuffyMenuData>> {
-          let data = await this.command('Select name, animal_type, image, owner FROM stuffies ORDER BY name, animal_type ASC;');
+          let data = await this.command('Select id, name, animal_type, image, owner FROM stuffies ORDER BY name, animal_type ASC;');
           if (data) {
                return data.rows;
           } else {

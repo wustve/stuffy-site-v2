@@ -43,7 +43,7 @@ async function menuRetrieve(req: any): Promise<MainData> {
     }
 }
 
-async function stuffyOfTheDay(stuffies: any) {
+async function stuffyOfTheDay(stuffies: Array<StuffyMenuData>) : Promise<[StuffyMenuData, StuffyMenuData]>  {
     let stevenStuffies = []
     let monicaStuffies = []
     var [anchorDateMonica, anchorDateSteven] = await getDate()
@@ -87,41 +87,41 @@ function getCurrentDate() {
     return currentDate
 }
 
-async function manipulateDatabase(req: any, res: any, update: any) {
+async function manipulateDatabase(req: any, res: any, update: boolean) {
     if (await isInvalid(req)) {
          return res.send({ msg: 'Invalid Fields' })
     }
 
     if (req.session.canEdit) {
-         var stuffies:any = await new DatabaseController(process.env.DATABASE_URL!).menuResult()
+         let stuffies: Array<StuffyMenuData> = await new DatabaseController(process.env.DATABASE_URL!).menuResult();
+         let id: number = -1;
          if (update) {
-              const originalName = req.params.stuffyName.replace(/_/g, ' ')
-              const originalType = req.params.stuffyType.replace(/_/g, ' ')
+               let subject : StuffyMenuData = stuffies!.find((stuffy: StuffyMenuData) => (stuffy.id == req.params.id))!;
+               if ((subject.name == req.body.name && subject.animal_type == req.body.animalType) || !(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
+                    
+                    let sotD = (await currentSotD(subject.owner, stuffies))!;
+                    let query = 'UPDATE stuffies SET name = $1, animal_type = $2, image = $3, name_origin = $4, origin = $5, other_notes = $6 WHERE id = $7'
+                    let values = [req.body.name, req.body.animalType, req.body.image, req.body.nameOrigin, req.body.origin, req.body.otherNotes, req.params.id]
+                    await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
 
-              if ((originalName == req.body.name && originalType == req.body.animalType) || !(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
-                   var owner = stuffies.find((stuffy: any) => (stuffy.name == originalName && stuffy.animal_type == originalType)).owner
-                   var sotD = await currentSotD(owner, stuffies)
-                   var query = 'UPDATE stuffies SET name = $1, animal_type = $2, image = $3, name_origin = $4, origin = $5, other_notes = $6 WHERE name = $7 AND animal_type = $8'
-                   var values = [req.body.name, req.body.animalType, req.body.image, req.body.nameOrigin, req.body.origin, req.body.otherNotes, originalName, originalType]
-                   await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
-
-                   await keepStuffyofTheDayUpdate(sotD.name, sotD.animal_type, originalName, originalType, owner, req.body.name, req.body.animalType)
-              } else {
-                   return res.send({ msg: "Another stuffy of the same name already exists!" })
-              }
+                    await keepStuffyofTheDayUpdate(sotD.id, subject.owner)
+               } else {
+                    return res.send({ msg: "Another stuffy of the same name already exists!" })
+               }
+               id = subject.id;
          }
          else if (!(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
-              var sotD = await currentSotD(req.body.owner, stuffies)
+              var sotD = (await currentSotD(req.body.owner, stuffies))!;
 
-              var query = 'INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) VALUES ($1, $2, $3, $4, $5, $6, $7)'
+              var query = `INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING stuffies.id`
               var values = [req.body.name, req.body.animalType, req.body.image, req.body.owner, req.body.nameOrigin, req.body.origin, req.body.otherNotes]
-              await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
-              await keepStuffyofTheDay(sotD.name, sotD.animal_type, req.body.owner)
+              id = (await new DatabaseController(process.env.DATABASE_URL!).command(query, values))?.rows[0].id;
+              await keepStuffyofTheDay(sotD.id, req.body.owner)
          } else {
               return res.send({ msg: "This stuffy already exists!" })
          }
-
-         const newUrl = "/" + req.body.name.replace(/ /g, '_') + '/' + req.body.animalType.replace(/ /g, '_') + "#active"
+         
+         const newUrl = "/" + id.toString();
          res.json({ msg: 'Success', url: newUrl })
     }
     else {
@@ -130,18 +130,14 @@ async function manipulateDatabase(req: any, res: any, update: any) {
 }
 
 
-async function currentSotD(owner: string, stuffies: Array<any>) {
+async function currentSotD(owner: string, stuffies: Array<StuffyMenuData>) {
     let stevenStuffy, monicaStuffy
-    [stevenStuffy, monicaStuffy] = await stuffyOfTheDay(stuffies)
-    var stuffyName, stuffyType
+    [stevenStuffy, monicaStuffy] = await stuffyOfTheDay(stuffies);
     if (owner == "Steven") {
-         stuffyName = stevenStuffy.name
-         stuffyType = stevenStuffy.animal_type
+         return stevenStuffy;
     } else if (owner == "Monica") {
-         stuffyName = monicaStuffy.name
-         stuffyType = monicaStuffy.animal_type
+         return monicaStuffy;
     }
-    return {name: stuffyName, animal_type: stuffyType}
 }
 
 
@@ -162,32 +158,22 @@ async function isInvalid(req: any) {
 }
 
 
-async function keepStuffyofTheDayUpdate(sotdName: string, sotdType: string, oldName: string, oldType: string, owner: string, newName: string, newType: string) {
+async function keepStuffyofTheDayUpdate(id: number, owner: string) {
     if (owner !== "Steven" && owner !== "Monica") {
-         return
+          return;
     }
     else {
-         if (((oldName === sotdName) && (sotdType === oldType))){
-              await keepStuffyofTheDay(newName, newType, owner)
-         } else{
-              await keepStuffyofTheDay(sotdName, sotdType, owner)
-         }
-         /*const stuffies = await new DatabaseController(process.env.DATABASE_URL).command("SELECT name, animal_type FROM stuffies WHERE owner = $1 ORDER BY name, animal_type ASC;", [owner])
-         if (beforeAlpha(oldName, currentName, oldType, currentType) && beforeAlpha(currentName, updateName, currentType, updateType)) {
-              
-         }
-         else if (beforeAlpha(currentName, oldName, currentType, oldType) && beforeAlpha(updateName, currentName, updateType, currentType)) {
-    
-         }*/
+          console.log("adjustment needed")
+          await keepStuffyofTheDay(id, owner);
     }
 }
 
-async function keepStuffyofTheDay(sotdName: string, sotdType: string, owner: string) {
+async function keepStuffyofTheDay(id : number, owner: string) {
     if (owner !== "Steven" && owner !== "Monica") {
-         return
+         return;
     }
-    const stuffies = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT name, animal_type FROM stuffies WHERE owner = $1 ORDER BY name, animal_type ASC;", [owner])
-    const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.name == sotdName && stuffy.animal_type == sotdType))
+    const stuffies = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT id, name, animal_type FROM stuffies WHERE owner = $1 ORDER BY name, animal_type ASC;", [owner])
+    const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.id == id));
 
     var today = getCurrentDate()
     var anchor: any = today.minus({ days: offset })
@@ -198,22 +184,7 @@ async function keepStuffyofTheDay(sotdName: string, sotdType: string, owner: str
 const publicPath = path.join(path.resolve(), 'build');
 app.use(express.static(publicPath));
 
-app.post("/:stuffyName/:stuffyType", [
-     body('name')
-          .trim()
-          .not().isEmpty(),
-     body('animalType')
-          .trim()
-          .not().isEmpty(),
-     body('image')
-          .trim()
-          .not().isEmpty()
-          .isURL(),
-], async (req : any, res : any) => {
-     await manipulateDatabase(req, res, true)
-})
-
-app.post('/add-stuffy', [
+app.post('/stuffies/add-stuffy', [
      body('name')
           .trim()
           .not().isEmpty(),
@@ -231,14 +202,28 @@ app.post('/add-stuffy', [
      await manipulateDatabase(req, res, false)
 })
 
+app.post("/stuffies/:id", [
+     body('name')
+          .trim()
+          .not().isEmpty(),
+     body('animalType')
+          .trim()
+          .not().isEmpty(),
+     body('image')
+          .trim()
+          .not().isEmpty()
+          .isURL(),
+], async (req : any, res : any) => {
+     await manipulateDatabase(req, res, true)
+})
+
 app.get('/menu', async (req, res) => {
     const menuData: MainData = await menuRetrieve(req)
     res.send(menuData)
 })
 
-app.get("/stuffies/:stuffyName/:stuffyType", async function (req, res) {
-
-     let dbResult = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT * FROM stuffies WHERE name = $1 AND animal_type = $2", [req.params.stuffyName.replace(/_/g, ' '), req.params.stuffyType.replace(/_/g, ' ')])
+app.get("/stuffies/:id", async function (req, res) {
+     let dbResult = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT * FROM stuffies WHERE id = $1", [req.params.id])
      if (dbResult && dbResult.rowCount > 0) {
           let [selectedStuffy] = dbResult.rows;
           res.send(selectedStuffy)
@@ -269,25 +254,18 @@ app.delete('/logout', (req: any,res: any) => {
      res.send();
 })
 
-app.delete("/:stuffyName/:animalType", async (req:any, res:any) => {
-     var stuffies:any = await new DatabaseController(process.env.DATABASE_URL!).menuResult()
+app.delete("/stuffies/:id", async (req:any, res:any) => {
+     let stuffies: Array<StuffyMenuData> = (await new DatabaseController(process.env.DATABASE_URL!).menuResult());
      if (req.session.canEdit) {
-          const name = req.params.stuffyName.replace(/_/g, ' ')
-          const type = req.params.animalType.replace(/_/g, ' ')
-          const values = [name,type]
+          const id = req.params.id;
           
-          const owner = stuffies.find((stuffy:any) => (stuffy.name == name && stuffy.animal_type == type)).owner
-          const sotD = await currentSotD(owner, stuffies)
-          console.log(sotD)
-          if (sotD.name == name && sotD.animal_type == type){
-               await keepStuffyofTheDay(sotD.name, sotD.animal_type, owner)
+          const owner = stuffies.find((stuffy: StuffyMenuData) => (stuffy.id == id))!.owner
+          const sotD = (await currentSotD(owner, stuffies))!;
+          await new DatabaseController(process.env.DATABASE_URL!).command("DELETE from stuffies where id = $1", [id])
+          if (id != sotD.id) {
+               await keepStuffyofTheDay(sotD.id, owner);
           }
-          await new DatabaseController(process.env.DATABASE_URL!).command("DELETE from stuffies where name = $1 AND animal_type = $2", values)
-          if (sotD.name !== name || sotD.animal_type !== type){
-               await keepStuffyofTheDay(sotD.name, sotD.animal_type, owner)
-          }
-
-
+          
           res.send("Success")
      } else {
           res.send(invalidPermissions)
