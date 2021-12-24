@@ -59,7 +59,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      }
 
      handleSubmit(event : any) {
-          fetch(this.props.path, {
+          fetch('/stuffies' + this.props.path, {
                method: 'POST',
                headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
           if (!window.confirm("Are you sure you want to delete " + this.state.name + ' (' + this.state.animalType + ')')) {
                return;
           }
-          fetch(this.props.path, {
+          fetch('/stuffies' + this.props.path, {
                method: 'DELETE'
           })
           .then(res => res.text())

@@ -113,9 +113,10 @@ async function manipulateDatabase(req: any, res: any, update: any) {
          else if (!(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
               var sotD = (await currentSotD(req.body.owner, stuffies))!;
 
-              var query = 'INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) OUTPUT INSERTED.id VALUES ($1, $2, $3, $4, $5, $6, $7)'
+              var query = `INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) OUTPUT Inserted.id VALUES ($1, $2, $3, $4, $5, $6, $7)`
               var values = [req.body.name, req.body.animalType, req.body.image, req.body.owner, req.body.nameOrigin, req.body.origin, req.body.otherNotes]
-              console.log(await new DatabaseController(process.env.DATABASE_URL!).command(query, values))
+              let test = (await new DatabaseController(process.env.DATABASE_URL!).command(query, values))
+              console.log(test)
               await keepStuffyofTheDay(sotD.id, req.body.owner)
          } else {
               return res.send({ msg: "This stuffy already exists!" })
@@ -184,22 +185,8 @@ async function keepStuffyofTheDay(id : number, owner: string) {
 const publicPath = path.join(path.resolve(), 'build');
 app.use(express.static(publicPath));
 
-app.post("/:id", [
-     body('name')
-          .trim()
-          .not().isEmpty(),
-     body('animalType')
-          .trim()
-          .not().isEmpty(),
-     body('image')
-          .trim()
-          .not().isEmpty()
-          .isURL(),
-], async (req : any, res : any) => {
-     await manipulateDatabase(req, res, true)
-})
 
-app.post('/add-stuffy', [
+app.post('/stuffies/add-stuffy', [
      body('name')
           .trim()
           .not().isEmpty(),
@@ -217,12 +204,28 @@ app.post('/add-stuffy', [
      await manipulateDatabase(req, res, false)
 })
 
+app.post("/stuffies/:id", [
+     body('name')
+          .trim()
+          .not().isEmpty(),
+     body('animalType')
+          .trim()
+          .not().isEmpty(),
+     body('image')
+          .trim()
+          .not().isEmpty()
+          .isURL(),
+], async (req : any, res : any) => {
+     await manipulateDatabase(req, res, true)
+})
+
 app.get('/menu', async (req, res) => {
     const menuData: MainData = await menuRetrieve(req)
     res.send(menuData)
 })
 
 app.get("/stuffies/:id", async function (req, res) {
+     console.log(req)
 
      let dbResult = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT * FROM stuffies WHERE id = $1", [req.params.id])
      if (dbResult && dbResult.rowCount > 0) {
@@ -255,7 +258,7 @@ app.delete('/logout', (req: any,res: any) => {
      res.send();
 })
 
-app.delete("/:id", async (req:any, res:any) => {
+app.delete("/stuffies/:id", async (req:any, res:any) => {
      let stuffies: Array<StuffyMenuData> = (await new DatabaseController(process.env.DATABASE_URL!).menuResult());
      if (req.session.canEdit) {
           const id = req.params.id;
