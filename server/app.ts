@@ -103,8 +103,8 @@ async function manipulateDatabase(req: any, res: any, update: boolean) {
                     let query = 'UPDATE stuffies SET name = $1, animal_type = $2, image = $3, name_origin = $4, origin = $5, other_notes = $6 WHERE id = $7'
                     let values = [req.body.name, req.body.animalType, req.body.image, req.body.nameOrigin, req.body.origin, req.body.otherNotes, req.params.id]
                     await new DatabaseController(process.env.DATABASE_URL!).command(query, values)
-
-                    await keepStuffyofTheDayUpdate(sotD.id, subject.owner)
+                    await keepStuffyofTheDay(sotD, subject.owner);
+                    
                } else {
                     return res.send({ msg: "Another stuffy of the same name already exists!" })
                }
@@ -116,7 +116,7 @@ async function manipulateDatabase(req: any, res: any, update: boolean) {
               var query = `INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING stuffies.id`
               var values = [req.body.name, req.body.animalType, req.body.image, req.body.owner, req.body.nameOrigin, req.body.origin, req.body.otherNotes]
               id = (await new DatabaseController(process.env.DATABASE_URL!).command(query, values))?.rows[0].id;
-              await keepStuffyofTheDay(sotD.id, req.body.owner)
+              await keepStuffyofTheDay(sotD, req.body.owner)
          } else {
               return res.send({ msg: "This stuffy already exists!" })
          }
@@ -157,23 +157,12 @@ async function isInvalid(req: any) {
     }
 }
 
-
-async function keepStuffyofTheDayUpdate(id: number, owner: string) {
-    if (owner !== "Steven" && owner !== "Monica") {
-          return;
-    }
-    else {
-          console.log("adjustment needed")
-          await keepStuffyofTheDay(id, owner);
-    }
-}
-
-async function keepStuffyofTheDay(id : number, owner: string) {
-    if (owner !== "Steven" && owner !== "Monica") {
+async function keepStuffyofTheDay(sotD : StuffyMenuData, owner: string) {
+    if ((owner !== "Steven" && owner !== "Monica") || !sotD) {
          return;
     }
     const stuffies = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT id, name, animal_type FROM stuffies WHERE owner = $1 ORDER BY name, animal_type ASC;", [owner])
-    const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.id == id));
+    const offset = stuffies!.rows.findIndex((stuffy: any) => (stuffy.id == sotD.id));
 
     var today = getCurrentDate()
     var anchor: any = today.minus({ days: offset })
@@ -262,8 +251,8 @@ app.delete("/stuffies/:id", async (req:any, res:any) => {
           const owner = stuffies.find((stuffy: StuffyMenuData) => (stuffy.id == id))!.owner
           const sotD = (await currentSotD(owner, stuffies))!;
           await new DatabaseController(process.env.DATABASE_URL!).command("DELETE from stuffies where id = $1", [id])
-          if (id != sotD.id) {
-               await keepStuffyofTheDay(sotD.id, owner);
+          if (sotD && id != sotD.id) {
+               await keepStuffyofTheDay(sotD, owner);
           }
           
           res.send("Success")
