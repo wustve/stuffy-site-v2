@@ -87,7 +87,8 @@ function getCurrentDate() {
     return currentDate
 }
 
-async function manipulateDatabase(req: any, res: any, update: any) {
+async function manipulateDatabase(req: any, res: any, update: boolean) {
+     console.log(update)
     if (await isInvalid(req)) {
          return res.send({ msg: 'Invalid Fields' })
     }
@@ -113,10 +114,9 @@ async function manipulateDatabase(req: any, res: any, update: any) {
          else if (!(await alreadyExists(req.body.name, req.body.animalType, stuffies))) {
               var sotD = (await currentSotD(req.body.owner, stuffies))!;
 
-              var query = `INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) OUTPUT Inserted.id VALUES ($1, $2, $3, $4, $5, $6, $7)`
+              var query = `INSERT INTO stuffies (name, animal_type, image, owner, name_origin, origin, other_notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING stuffies.id`
               var values = [req.body.name, req.body.animalType, req.body.image, req.body.owner, req.body.nameOrigin, req.body.origin, req.body.otherNotes]
-              let test = (await new DatabaseController(process.env.DATABASE_URL!).command(query, values))
-              console.log(test)
+              id = (await new DatabaseController(process.env.DATABASE_URL!).command(query, values))?.rows[0].id;
               await keepStuffyofTheDay(sotD.id, req.body.owner)
          } else {
               return res.send({ msg: "This stuffy already exists!" })
@@ -185,21 +185,6 @@ async function keepStuffyofTheDay(id : number, owner: string) {
 const publicPath = path.join(path.resolve(), 'build');
 app.use(express.static(publicPath));
 
-app.post("/stuffies/:id", [
-     body('name')
-          .trim()
-          .not().isEmpty(),
-     body('animalType')
-          .trim()
-          .not().isEmpty(),
-     body('image')
-          .trim()
-          .not().isEmpty()
-          .isURL(),
-], async (req : any, res : any) => {
-     await manipulateDatabase(req, res, true)
-})
-
 app.post('/stuffies/add-stuffy', [
      body('name')
           .trim()
@@ -216,6 +201,21 @@ app.post('/stuffies/add-stuffy', [
           .isURL(),
 ], async (req : any, res : any) => {
      await manipulateDatabase(req, res, false)
+})
+
+app.post("/stuffies/:id", [
+     body('name')
+          .trim()
+          .not().isEmpty(),
+     body('animalType')
+          .trim()
+          .not().isEmpty(),
+     body('image')
+          .trim()
+          .not().isEmpty()
+          .isURL(),
+], async (req : any, res : any) => {
+     await manipulateDatabase(req, res, true)
 })
 
 app.get('/menu', async (req, res) => {
