@@ -2,7 +2,7 @@ import { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import './menu.scss';
-import getLink from "../article/helpers/getlink";
+import getLink from "../helpers/getlink";
 
 export default class Menu extends Component<{ options: Array<StuffyMenuData> }, { display: Array<StuffyMenuData>, query: string }> {
     constructor(props) {

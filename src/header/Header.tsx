@@ -4,7 +4,7 @@ import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import { LocalStorageKey } from "../enums/LocalStorageKey";
 import { ColourMode } from '../enums/ColourMode'
 import './Header.scss';
-import getLink from "../article/helpers/getlink";
+import getLink from "../helpers/getlink";
 
 export default class Header extends Component<{
      stevenStuffy: StuffyMenuData,

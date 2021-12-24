@@ -224,8 +224,6 @@ app.get('/menu', async (req, res) => {
 })
 
 app.get("/stuffies/:id", async function (req, res) {
-     console.log(req)
-
      let dbResult = await new DatabaseController(process.env.DATABASE_URL!).command("SELECT * FROM stuffies WHERE id = $1", [req.params.id])
      if (dbResult && dbResult.rowCount > 0) {
           let [selectedStuffy] = dbResult.rows;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, NavLink, HashRouter } from "react-router-dom";
+import { Route, NavLink, HashRouter, Switch } from "react-router-dom";
 
 import Home from "../home/home";
 import Header from "../header/Header";
@@ -63,10 +63,12 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
             <Header stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} loggedIn = {this.state.loggedIn} updateLogin = {this.updateLogin}/>
             <Menu options={this.state.mainData.options}></Menu>
             <div className="content">
-              <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
-              <Route exact path="/:id" render={props => <Article fetchMenu={this.fetchMenu}{...props}></Article>}/>
-              <Route path="/add-stuffy" render={props => <Add fetchMenu={this.fetchMenu} {...props}></Add>}/>
-              <Route path="/login" render={props => <Login updateLogin = {this.updateLogin} {...props} />}/>
+              <Switch>
+                <Route exact path="/" render={props => <Home stevenStuffy={this.state.mainData.stevenStuffy} monicaStuffy={this.state.mainData.monicaStuffy} {...props}></Home>} />
+                <Route path="/add-stuffy" render={props => <Add fetchMenu={this.fetchMenu} {...props}></Add>}/>
+                <Route path="/login" render={props => <Login updateLogin = {this.updateLogin} {...props} />}/>
+                <Route exact path="/:id" render={props => <Article fetchMenu={this.fetchMenu}{...props}></Article>}/>
+              </Switch>
             </div>
           </HashRouter>
         </div>
