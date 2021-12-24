@@ -44,8 +44,8 @@ async function menuRetrieve(req: any): Promise<MainData> {
 }
 
 async function stuffyOfTheDay(stuffies: Array<StuffyMenuData>) : Promise<[StuffyMenuData, StuffyMenuData]>  {
-    let stevenStuffies = []
-    let monicaStuffies = []
+    let stevenStuffies: Array<StuffyMenuData> = [];
+    let monicaStuffies: Array<StuffyMenuData> = [];
     var [anchorDateMonica, anchorDateSteven] = await getDate()
     let currentDate = getCurrentDate()
     for (const num in stuffies) {

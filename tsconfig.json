@@ -20,7 +20,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "inlineSourceMap": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "noImplicitAny": false,
   },
   "include": [
     "server",
