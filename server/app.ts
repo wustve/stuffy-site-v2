@@ -256,11 +256,11 @@ app.delete('/logout', (req: any,res: any) => {
 })
 
 app.delete("/:id", async (req:any, res:any) => {
-     let stuffies: Array<StuffyMenuData> = (await new DatabaseController(process.env.DATABASE_URL!).menuResult())!;
+     let stuffies: Array<StuffyMenuData> = (await new DatabaseController(process.env.DATABASE_URL!).menuResult());
      if (req.session.canEdit) {
           const id = req.params.id;
           
-          const owner = stuffies.find((stuffy: StuffyMenuData) => (stuffy.id == id)).owner
+          const owner = stuffies.find((stuffy: StuffyMenuData) => (stuffy.id == id))!.owner
           const sotD = (await currentSotD(owner, stuffies))!;
           await new DatabaseController(process.env.DATABASE_URL!).command("DELETE from stuffies where id = $1", [id])
           if (id != sotD.id) {
