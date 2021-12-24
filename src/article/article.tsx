@@ -4,6 +4,7 @@ import {ArticleData} from "../../interfaces/ArticleData";
 import ArticleSection from "./ArticleSection"
 import StuffyForm from "../stuffyform/StuffyForm"
 import './article.scss';
+import Image from "../image/image";
 
 export default class Article extends Component<{match: any, history: any, fetchMenu: any}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
      constructor(props) {
@@ -62,8 +63,10 @@ export default class Article extends Component<{match: any, history: any, fetchM
      exitEditModeSuccess(url: string) {
           this.props.fetchMenu();
           this.props.history.push(url);
-          this.exitEditMode();
-          this.fetchData();
+          if (url !== "/") {
+               this.exitEditMode();
+               this.fetchData();
+          }
      }
 
      render() {
@@ -81,9 +84,7 @@ export default class Article extends Component<{match: any, history: any, fetchM
                          <button id = 'edit' onClick = {this.enterEditMode}>[ Edit ]</button>
                     </div>
                     <div id = "info-wrapper">
-                         <div id ="image-div">
-                              <img src={this.state.articleData.image} className = "thumbnail"/>
-                         </div>
+                         <Image src = {this.state.articleData.image}></Image>
                          <div id = "paragraphs">
                               <ArticleSection title='Owner' content={this.state.articleData.owner}/>
                               <ArticleSection title='Animal Type' content={this.state.articleData.animal_type}/>

@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
 import './menu.scss';
 
-export default class Menu extends Component<{ options: Array<StuffyMenuData> }, { display: Array<StuffyMenuData> }> {
+export default class Menu extends Component<{ options: Array<StuffyMenuData> }, { display: Array<StuffyMenuData>, query: string }> {
     constructor(props) {
         super(props);
-        this.state = { display: this.props.options };
+        this.state = { display: this.props.options, query: "" };
     }
 
     componentWillReceiveProps(nextProps: Readonly<{ options: Array<StuffyMenuData>; }>, nextContext: any): void {
-        this.state = { display: nextProps.options };
+        this.search(this.state.query, nextProps.options);
     }
 
     getLink(stuffy: StuffyMenuData) {
@@ -18,12 +18,15 @@ export default class Menu extends Component<{ options: Array<StuffyMenuData> }, 
     }
 
     filter = ({ target }) => {
+        this.setState({query: target.value.toLowerCase()});
+        this.search(target.value.toLowerCase(), this.props.options);
+    }
 
-        if (target.value === '') {
-            this.setState({ display: this.props.options });
+    search = (query: string, stuffies: Array<StuffyMenuData>) => {
+        if (query === '') {
+            this.setState({ display: stuffies });
         } else {
-            let query = target.value.toLowerCase();
-            this.setState({ display: this.props.options.filter(stuffy => (stuffy.name + stuffy.animal_type).toLowerCase().includes(query)) });
+            this.setState({ display: stuffies.filter(stuffy => (stuffy.name + stuffy.animal_type).toLowerCase().includes(query)) });
         }
     }
 

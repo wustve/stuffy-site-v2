@@ -58,19 +58,15 @@ textarea {
 
 #image-div {
      margin-top: 1%;
+     width: 20vw;
+     border-color: var(--element-colour);
+     border-style: solid;
+     border-width: 20px;
 }
 
 #info-wrapper {
      display: flex;
      margin-top: 1%;
-}
-
-.thumbnail {
-     width: 20vw;
-     object-fit: contain;
-     border-color: var(--element-colour);
-     border-style: solid;
-     border-width: 20px;
 }
 
 #paragraphs {

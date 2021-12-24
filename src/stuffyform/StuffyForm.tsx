@@ -85,7 +85,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      }
 
      handleDelete(event : any) {
-          if (!window.confirm("Are you sure you want to delete" + this.state.name + ' (' + this.state.animalType + ')')) {
+          if (!window.confirm("Are you sure you want to delete " + this.state.name + ' (' + this.state.animalType + ')')) {
                return;
           }
           fetch(this.props.path, {
