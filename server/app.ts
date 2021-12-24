@@ -88,7 +88,6 @@ function getCurrentDate() {
 }
 
 async function manipulateDatabase(req: any, res: any, update: boolean) {
-     console.log(update)
     if (await isInvalid(req)) {
          return res.send({ msg: 'Invalid Fields' })
     }
