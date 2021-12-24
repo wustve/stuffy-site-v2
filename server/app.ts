@@ -185,6 +185,20 @@ async function keepStuffyofTheDay(id : number, owner: string) {
 const publicPath = path.join(path.resolve(), 'build');
 app.use(express.static(publicPath));
 
+app.post("/stuffies/:id", [
+     body('name')
+          .trim()
+          .not().isEmpty(),
+     body('animalType')
+          .trim()
+          .not().isEmpty(),
+     body('image')
+          .trim()
+          .not().isEmpty()
+          .isURL(),
+], async (req : any, res : any) => {
+     await manipulateDatabase(req, res, true)
+})
 
 app.post('/stuffies/add-stuffy', [
      body('name')
@@ -202,21 +216,6 @@ app.post('/stuffies/add-stuffy', [
           .isURL(),
 ], async (req : any, res : any) => {
      await manipulateDatabase(req, res, false)
-})
-
-app.post("/stuffies/:id", [
-     body('name')
-          .trim()
-          .not().isEmpty(),
-     body('animalType')
-          .trim()
-          .not().isEmpty(),
-     body('image')
-          .trim()
-          .not().isEmpty()
-          .isURL(),
-], async (req : any, res : any) => {
-     await manipulateDatabase(req, res, true)
 })
 
 app.get('/menu', async (req, res) => {
