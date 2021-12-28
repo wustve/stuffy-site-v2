@@ -6,7 +6,7 @@ import StuffyForm from "../stuffyform/StuffyForm"
 import './article.scss';
 import Image from "../image/image";
 
-export default class Article extends Component<{match: any, history: any, fetchMenu: any}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
+export default class Article extends Component<{match: any, history: any, fetchMenu: any, loggedIn : boolean}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
      constructor(props) {
           super(props);
           this.state = {
@@ -82,7 +82,7 @@ export default class Article extends Component<{match: any, history: any, fetchM
                <div id = "content-wrapper">
                     <div className = "title" id = "main-title">
                          <h1>{this.state.articleData.name}</h1>
-                         <button id = 'edit' onClick = {this.enterEditMode}>[ Edit ]</button>
+                         {this.props.loggedIn? <button id = 'edit' onClick = {this.enterEditMode}>[ Edit ]</button> : null}
                     </div>
                     <div id = "info-wrapper">
                          <Image src = {this.state.articleData.image}></Image>

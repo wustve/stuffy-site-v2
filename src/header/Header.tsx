@@ -78,7 +78,7 @@ export default class Header extends Component<{
                <div id="header">
                     <div id="login-housing">
                          {this.props.loggedIn ? <a onClick={() => this.logout()}>Logout</a> : <NavLink to='/login'>Login</NavLink>}
-                         <NavLink to='/add-stuffy'>Add New Stuffy</NavLink>
+                         {this.props.loggedIn ? <NavLink to='/add-stuffy'>Add New Stuffy</NavLink> : null}
                     </div>
                     <NavLink to={getLink(this.props.stevenStuffy)}>Steven's stuffy of the day</NavLink>
                     <NavLink to={getLink(this.props.monicaStuffy)}>Monica's stuffy of the day</NavLink>
