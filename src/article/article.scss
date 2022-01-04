@@ -57,11 +57,9 @@ textarea {
 }
 
 #image-div {
-     margin-top: 1%;
-     width: 20vw;
-     border-color: var(--element-colour);
-     border-style: solid;
-     border-width: 20px;
+     min-width: 20vw;
+     max-width: 30vw;
+     max-height: 60vw;
 }
 
 #info-wrapper {
