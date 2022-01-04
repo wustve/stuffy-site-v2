@@ -85,7 +85,9 @@ export default class Article extends Component<{match: any, history: any, fetchM
                          {this.props.loggedIn? <button id = 'edit' onClick = {this.enterEditMode}>[ Edit ]</button> : null}
                     </div>
                     <div id = "info-wrapper">
-                         <Image src = {this.state.articleData.image}></Image>
+                         <div id = "image-div">
+                              <Image src = {this.state.articleData.image}></Image>
+                         </div>
                          <div id = "paragraphs">
                               <ArticleSection title='Owner' content={this.state.articleData.owner}/>
                               <ArticleSection title='Animal Type' content={this.state.articleData.animal_type}/>
