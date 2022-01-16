@@ -7,11 +7,11 @@ import Article from "../article/article";
 import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
 import Add from "../add/Add";
-import Edit from "../edit/Edit";
 import './Main.scss'
 import '@fontsource/merriweather';
 import './colourmode.scss';
 import Login from "../login/login";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export default class Main extends Component<{}, { isLoaded: boolean, error: any, mainData: MainData, loggedIn: boolean }> {
   constructor(props) {
@@ -55,7 +55,7 @@ export default class Main extends Component<{}, { isLoaded: boolean, error: any,
     if (this.state.error) {
       return <div className="body">error {this.state.error.message}</div>;
     } else if (!this.state.isLoaded) {
-      return <div className="body">loading</div>
+      return  <LinearProgress />;
     } else {
       return (
         <div className="body">
