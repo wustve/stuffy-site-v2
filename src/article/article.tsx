@@ -5,6 +5,7 @@ import ArticleSection from "./ArticleSection"
 import StuffyForm from "../stuffyform/StuffyForm"
 import './article.scss';
 import Image from "../image/image";
+import { LinearProgress } from "@mui/material";
 
 export default class Article extends Component<{match: any, history: any, fetchMenu: any, loggedIn : boolean}, {isLoaded: boolean, error: any, articleData: ArticleData, isEditMode: boolean}> {
      constructor(props) {
@@ -74,7 +75,7 @@ export default class Article extends Component<{match: any, history: any, fetchM
           if (this.state.error) {
                return <div className="body">error {this.state.error.message}</div>;
           } else if (!this.state.isLoaded) {
-               return <div className="body">loading</div>;
+               return <LinearProgress />;
           } else if (this.state.isEditMode) {
                return (<StuffyForm path={this.props.match.url} isAdd={false} articleData={this.state.articleData} exitSuccess={this.exitEditModeSuccess} exit={this.exitEditMode}/>);
           } else {
