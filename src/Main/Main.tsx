@@ -8,7 +8,7 @@ import { MainData } from '../../interfaces/MainData'
 import Menu from "../menu/menu";
 import Add from "../add/Add";
 import './Main.scss'
-import '@fontsource/merriweather';
+import 'typeface-roboto';
 import './colourmode.scss';
 import Login from "../login/login";
 import LinearProgress from "@mui/material/LinearProgress";
