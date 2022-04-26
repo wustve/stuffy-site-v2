@@ -12,12 +12,13 @@ const ColouredTextField = styled((props: TextFieldProps) => (
     '& .MuiFilledInput-root': {
         color: "var(--text-colour)",
         backgroundColor: "var(--main-bg-colour)",
-        '& fieldset': {
-            
-            borderBottomColor: "var(--border-colour)",
+    },
+    '& .MuiFilledInput-underline': {
+        '&:before, &&:hover:before' : {
+          borderBottomColor: 'var(--border-colour) !important',
         },
-        
-    }
+      },
+      
     
 })
 
