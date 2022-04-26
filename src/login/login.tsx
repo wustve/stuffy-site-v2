@@ -74,7 +74,7 @@ export default class Login extends Component<any, any>{
                 <ColouredTextField type='text' label = "Username" name='username' required={true} onChange={this.handleChange} variant = "filled" fullWidth></ColouredTextField>
 
                 <ColouredTextField type='password' label = "Password" name='password' required={true} onChange={this.handleChange}  variant = "filled" fullWidth></ColouredTextField>
-                <div id='status'>{this.state.status}</div>
+                <span id='status'>{this.state.status}</span>
                 <input type='submit' value='Login'></input>
             </form>
         )
