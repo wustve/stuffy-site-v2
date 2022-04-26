@@ -1,5 +1,25 @@
+import { createTheme, styled, TextField, TextFieldProps, ThemeProvider } from "@mui/material";
 import { Component, } from "react";
 import "./login.scss";
+
+const ColouredTextField = styled((props: TextFieldProps) => (
+    <TextField {...props}/>
+))({
+    display: "block",
+    "& label" : {
+        color: "var(--text-colour)",
+    },
+    '& .MuiFilledInput-root': {
+        color: "var(--text-colour)",
+        backgroundColor: "var(--main-bg-colour)",
+        '& fieldset': {
+            
+            borderBottomColor: "var(--border-colour)",
+        },
+        
+    }
+    
+})
 
 export default class Login extends Component<any, any>{
     constructor(props: any) {
@@ -50,9 +70,9 @@ export default class Login extends Component<any, any>{
     render() {
         return (
             <form autoComplete="off" onSubmit={this.handleSubmit}>
-                Username: <input type='text' name='username' required={true} onChange={this.handleChange}></input>
+                <ColouredTextField type='text' label = "Username" name='username' required={true} onChange={this.handleChange} variant = "filled" fullWidth></ColouredTextField>
 
-                Password: <input type='password' name='password' required={true} onChange={this.handleChange}></input>
+                <ColouredTextField type='password' label = "Password" name='password' required={true} onChange={this.handleChange}  variant = "filled" fullWidth></ColouredTextField>
                 <div id='status'>{this.state.status}</div>
                 <input type='submit' value='Login'></input>
             </form>

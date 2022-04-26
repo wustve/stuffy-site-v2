@@ -3,10 +3,6 @@ import OwnerInput from "./OwnerInput"
 import DeleteButton from "./DeleteButton"
 import CancelButton from "./CancelButton"
 import {ArticleData} from "../../interfaces/ArticleData";
-import {Route, NavLink, useRouteMatch} from "react-router-dom";
-import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
-import {LocalStorageKey} from "../enums/LocalStorageKey";
-import {ColourMode} from '../enums/ColourMode'
 import '../header/Header.scss';
 
 export default class StuffyForm extends Component<{path : string, isAdd: boolean, exitSuccess : any, exit? : any, articleData?: ArticleData}, any> {
