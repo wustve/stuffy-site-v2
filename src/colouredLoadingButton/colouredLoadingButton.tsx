@@ -7,5 +7,10 @@ export default styled((props: LoadingButtonProps) => (
     alignSelf: "flex-start",
     marginBottom: "1%",
     color: "var(--text-colour)",
-    borderColor: "var(--border-colour)"
+    borderColor: "var(--border-colour)",
+    "&.MuiLoadingButton-loading": {
+        color: "var(--text-colour)",
+        borderColor: "var(--border-colour)"
+    }
+    
 })

@@ -18,7 +18,8 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                nameOrigin : props.articleData ? props.articleData.name_origin : "", 
                origin : props.articleData ? props.articleData.origin : "", 
                otherNotes : props.articleData ? props.articleData.other_notes : "",
-               status : ""
+               status : "",
+               loading : false
           };
           this.handleChange = this.handleChange.bind(this);
           this.handleSubmit = this.handleSubmit.bind(this);
@@ -56,6 +57,9 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      }
 
      handleSubmit(event : any) {
+          this.setState({
+               loading: true,
+          });
           fetch('/stuffies' + this.props.path, {
                method: 'POST',
                headers: {
@@ -73,7 +77,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
               })
           }).then((res : any) => res.json())
           .then((res : any) => {
-              this.setState({status : res.msg});
+              this.setState({status : res.msg, loading:false});
               if (res.msg === 'Success') {
                    this.afterSubmit(res.url);
               }
@@ -85,12 +89,15 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
           if (!window.confirm("Are you sure you want to delete " + this.state.name + ' (' + this.state.animalType + ')')) {
                return;
           }
+          this.setState({
+               loading: true,
+          });
           fetch('/stuffies' + this.props.path, {
                method: 'DELETE'
           })
           .then(res => res.text())
           .then(res => {
-               this.setState({status : res});
+               this.setState({status : res, loading: false});
                if (res === 'Success') {
                     this.afterSubmit('/');
                }
@@ -113,9 +120,9 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                         
                          <ColouredTextField variant="filled" label = "Other Notes" multiline fullWidth {...this.generateInputProps("otherNotes", this.state.otherNotes)}/>
                          <span id='status'>{this.state.status}</span>
-                         <ColouredLoadingButton type = "submit" loadingPosition="start" startIcon = {<SaveIcon/>} variant="outlined" className = "button">Submit</ColouredLoadingButton>
-                         <DeleteButton  isAdd={this.props.isAdd} onClick={this.handleDelete}/>
-                         <CancelButton  {...this.generateCancelButtonProps()}/>
+                         <ColouredLoadingButton loading={this.state.loading} type = "submit" loadingPosition="start" startIcon = {<SaveIcon/>} variant="outlined" className = "button">Submit</ColouredLoadingButton>
+                         <DeleteButton  loading={this.state.loading} isAdd={this.props.isAdd} onClick={this.handleDelete}/>
+                         <CancelButton  loading={this.state.loading} {...this.generateCancelButtonProps()}/>
                          
                     </form>
                </div>
