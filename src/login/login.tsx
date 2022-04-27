@@ -1,26 +1,6 @@
-import { createTheme, styled, TextField, TextFieldProps, ThemeProvider } from "@mui/material";
 import { Component, } from "react";
 import "./login.scss";
-
-const ColouredTextField = styled((props: TextFieldProps) => (
-    <TextField {...props}/>
-))({
-    display: "block",
-    "& label" : {
-        color: "var(--text-colour)",
-    },
-    '& .MuiFilledInput-root': {
-        color: "var(--text-colour)",
-        backgroundColor: "var(--main-bg-colour)",
-    },
-    '& .MuiFilledInput-underline': {
-        '&:before, &&:hover:before' : {
-          borderBottomColor: 'var(--border-colour) !important',
-        },
-      },
-      
-    
-})
+import ColouredTextField from "../colouredTextField/colouredTextField"
 
 export default class Login extends Component<any, any>{
     constructor(props: any) {
@@ -75,6 +55,7 @@ export default class Login extends Component<any, any>{
 
                 <ColouredTextField type='password' label = "Password" name='password' required={true} onChange={this.handleChange}  variant = "filled" fullWidth></ColouredTextField>
                 <span id='status'>{this.state.status}</span>
+                #
                 <input type='submit' value='Login'></input>
             </form>
         )
