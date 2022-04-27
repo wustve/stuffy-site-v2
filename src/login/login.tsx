@@ -1,7 +1,7 @@
 import { Component, } from "react";
 import "./login.scss";
 import ColouredTextField from "../colouredTextField/colouredTextField"
-
+import ColouredLoadingButton from "../colouredLoadingButton/colouredLoadingButton"
 export default class Login extends Component<any, any>{
     constructor(props: any) {
         super(props);
@@ -55,8 +55,7 @@ export default class Login extends Component<any, any>{
 
                 <ColouredTextField type='password' label = "Password" name='password' required={true} onChange={this.handleChange}  variant = "filled" fullWidth></ColouredTextField>
                 <span id='status'>{this.state.status}</span>
-                #
-                <input type='submit' value='Login'></input>
+                <ColouredLoadingButton variant="outlined" type="submit">Login</ColouredLoadingButton>
             </form>
         )
     }
