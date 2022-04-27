@@ -3,8 +3,9 @@ import OwnerInput from "./OwnerInput"
 import DeleteButton from "./DeleteButton"
 import CancelButton from "./CancelButton"
 import {ArticleData} from "../../interfaces/ArticleData";
-import '../header/Header.scss';
-
+import ColouredLoadingButton from "../colouredLoadingButton/colouredLoadingButton";
+import SaveIcon from '@mui/icons-material/Save';
+import ColouredTextField from "../colouredTextField/colouredTextField"
 export default class StuffyForm extends Component<{path : string, isAdd: boolean, exitSuccess : any, exit? : any, articleData?: ArticleData}, any> {
 
      constructor(props: any) {
@@ -100,41 +101,23 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      render() {
           return (
                <div id = "form">
-                    <form autoComplete = "off" onSubmit={this.handleSubmit}>
-                         <label className= 'required'>
-                              Name
-                         </label>
-                         <input {...this.generateInputProps("name", this.state.name)} required/>
-                         <label className= 'required'>
-                              Image Link
-                         </label>
-                         <input {...this.generateInputProps("image", this.state.image)} required/>
-                         <label className= 'required'>
-                              Owner
-                         </label>
+                    <form autoComplete = "off" onSubmit={this.handleSubmit} style={{display:"flex", flexDirection:'column'}}>
+                         <ColouredTextField variant="filled" label = "Name" {...this.generateInputProps("name", this.state.name)} required/>
+                         <ColouredTextField variant="filled" label = "Image" {...this.generateInputProps("image", this.state.image)} required/>
                          <OwnerInput isAdd={this.props.isAdd} value = {this.state.owner} onChangeFunc = {this.handleChange}/>
-                         <label className= 'required'>
-                              Animal Type
-                         </label>
-                         <input {...this.generateInputProps("animalType", this.state.animalType)} required/>
-                         <label>
-                              Name Origin 
-                         </label>
-                         <textarea {...this.generateTextAreaProps("nameOrigin")}>{this.state.nameOrigin}</textarea>
-                         <label>
-                              Origin
-                         </label>
-                         <textarea {...this.generateTextAreaProps("origin")}>{this.state.origin}</textarea>
-                         <label>
-                              Other Notes
-                         </label>
-                         <textarea {...this.generateTextAreaProps("otherNotes")}>{this.state.otherNotes}</textarea>
-                         <div id = 'status'><p>{this.state.status}</p></div>
-                         <input type = "submit" value = "Submit" id = "submit"/>
-                         <DeleteButton isAdd={this.props.isAdd} onClick={this.handleDelete}/>
-                         <CancelButton {...this.generateCancelButtonProps()}/>
+                         <ColouredTextField variant="filled" label = "Animal Type" {...this.generateInputProps("animalType", this.state.animalType)} required/>
+                         
+                         <ColouredTextField variant="filled" label = "Name Origin" multiline fullWidth {...this.generateInputProps("nameOrigin", this.state.nameOrigin)}/>
+                         
+                         <ColouredTextField variant="filled" label = "Origin" multiline fullWidth {...this.generateInputProps("origin", this.state.origin)}/>
+                        
+                         <ColouredTextField variant="filled" label = "Other Notes" multiline fullWidth {...this.generateInputProps("otherNotes", this.state.otherNotes)}/>
+                         <span id='status'>{this.state.status}</span>
+                         <ColouredLoadingButton type = "submit" loadingPosition="start" startIcon = {<SaveIcon/>} variant="outlined" className = "button">Submit</ColouredLoadingButton>
+                         <DeleteButton  isAdd={this.props.isAdd} onClick={this.handleDelete}/>
+                         <CancelButton  {...this.generateCancelButtonProps()}/>
+                         
                     </form>
-                    <p id = "form-disclaimer"><span style = {{color: "red"}}>*</span> indicates a required field</p>
                </div>
           );
      }

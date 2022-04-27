@@ -50,12 +50,12 @@ export default class Login extends Component<any, any>{
 
     render() {
         return (
-            <form autoComplete="off" onSubmit={this.handleSubmit}>
+            <form autoComplete="off" onSubmit={this.handleSubmit} style={{display:"flex", flexDirection:'column'}}>
                 <ColouredTextField type='text' label = "Username" name='username' required={true} onChange={this.handleChange} variant = "filled" fullWidth></ColouredTextField>
 
                 <ColouredTextField type='password' label = "Password" name='password' required={true} onChange={this.handleChange}  variant = "filled" fullWidth></ColouredTextField>
                 <span id='status'>{this.state.status}</span>
-                <ColouredLoadingButton variant="outlined" type="submit">Login</ColouredLoadingButton>
+                <ColouredLoadingButton variant="outlined" type="submit" className="Button">Login</ColouredLoadingButton>
             </form>
         )
     }

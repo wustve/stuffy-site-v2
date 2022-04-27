@@ -6,12 +6,15 @@ form {
 }
 
 body {
-     background-color: var(--main-bg-colour);
-     color: var(--text-colour);
-     margin:0;
-     
+    background-color: var(--main-bg-colour);
+    color: var(--text-colour);
+    margin:0;
 }
 
 #status:empty:before {
     content: "\200b"; // unicode zero width space character
   }
+#status {
+    margin-top: 0.25%;
+    margin-bottom: 0.25%;
+}
