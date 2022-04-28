@@ -33,7 +33,7 @@
     "start": "node dist/server/app.js",
     "postinstall": "npm run build && tsc --project tsconfig.server.json",
     "start-dev": "npm run postinstall &&  npm start",
-    "build": "react-scripts build",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

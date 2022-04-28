@@ -5,6 +5,10 @@ import { LocalStorageKey } from "../enums/LocalStorageKey";
 import { ColourMode } from '../enums/ColourMode'
 import './Header.scss';
 import getLink from "../helpers/getlink";
+import Switch from '@mui/material/Switch';
+import LightModeIcon from './light_mode_icon.png';
+import DarkModeIcon from './dark_mode_icon.png';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 export default class Header extends Component<{
      stevenStuffy: StuffyMenuData,
@@ -12,14 +16,12 @@ export default class Header extends Component<{
      loggedIn: boolean,
      updateLogin: (state: boolean) => void,
 }, {
-     lightMode: boolean,
-     toggleIcon: string
+     lightMode: boolean
 }> {
      constructor(props: any) {
           super(props);
           this.state = {
-               lightMode: false,
-               toggleIcon: '\u263E'
+               lightMode: false
           }
           this.logout = this.logout.bind(this);
      }
@@ -48,8 +50,7 @@ export default class Header extends Component<{
           if (colourMode) {
                html.setAttribute(LocalStorageKey.ColourMode, colourMode);
                this.setState({
-                    lightMode: colourMode === ColourMode.Light,
-                    toggleIcon: colourMode === ColourMode.Light ? '\u263C' : '\u263E'
+                    lightMode: colourMode === ColourMode.Light
                });
           }
      }
@@ -60,15 +61,13 @@ export default class Header extends Component<{
                html.setAttribute(LocalStorageKey.ColourMode, ColourMode.Light);
                localStorage.setItem(LocalStorageKey.ColourMode, ColourMode.Light);
                this.setState({
-                    lightMode: true,
-                    toggleIcon: '\u263C'
+                    lightMode: true
                });
           } else {
                html.setAttribute(LocalStorageKey.ColourMode, ColourMode.Dark);
                localStorage.setItem(LocalStorageKey.ColourMode, ColourMode.Dark);
                this.setState({
-                    lightMode: false,
-                    toggleIcon: '\u263E'
+                    lightMode: false
                });
           }
      }
@@ -83,10 +82,15 @@ export default class Header extends Component<{
                     <NavLink to={getLink(this.props.stevenStuffy)}>Steven's stuffy of the day</NavLink>
                     <NavLink to={getLink(this.props.monicaStuffy)}>Monica's stuffy of the day</NavLink>
                     <div id="toggle-housing">
-                         <label className="toggle">
-                              <input type="checkbox" id="darkLight" checked={this.state.lightMode} onChange={this.handleColourToggle} />
-                              <span id="slider">{this.state.toggleIcon}</span>
-                         </label>
+                         <StyledEngineProvider injectFirst>
+                              <Switch 
+                                   checked={this.state.lightMode}
+                                   className="toggle"
+                                   checkedIcon={<img src={LightModeIcon} width="20"/>}
+                                   icon={<img src={DarkModeIcon} width="20"/>}
+                                   onChange={this.handleColourToggle}
+                              />   
+                         </StyledEngineProvider>
                     </div>
                </div>
           );

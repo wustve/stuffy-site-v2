@@ -35,38 +35,21 @@
      background-color: var(--hover-colour) ;
 }
 
-
 #toggle-housing{
      flex:1;
      padding: 1vh;
-}
-
-.toggle {
-     cursor: pointer;
-     position: absolute;
-     width: 10vh;
-     right:0;
-     height: 5vh;
-     background-color: var(--element-colour);
-	border-radius: 2.5vh;
 }
 
 input#darkLight {
      display: none;
 }
 
-#slider,#slider-hidden {
-     position: absolute;
-     width: 4vh;
-     height: 4vh;
-     top: 0.5vh;
-     left: 0.5vh;
-	background: var(--header-menu-colour);
-     border-radius: 2vh;
-     font-size: 2vh;
-     text-align: center;
-     line-height: 3.8vh;
-     color: var(--text-colour);
+.toggle .MuiSwitch-track {
+     background-color:var(--text-colour);
+}
+
+.toggle .Mui-checked + .MuiSwitch-track {
+     background-color:var(--text-colour);
 }
 
 input#darkLight:checked + #slider {
