@@ -19,7 +19,8 @@ export default styled((props: TextFieldProps) => (
     "& .Mui-disabled" : {
         WebkitTextFillColor: "var(--text-colour) !important",
         color: "var(--text-colour) !important",
-
+        backgroundColor: "var(--main-bg-colour) !important",
+        cursor: "not-allowed",
     },
     
 })
