@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
-
-export default function CancelButton(props: {isAdd : boolean, exit? : any}) {
+import ColouredLoadingButton from "../colouredLoadingButton/colouredLoadingButton";
+import CancelIcon from '@mui/icons-material/Cancel';
+export default function CancelButton(props: {isAdd : boolean, loading: boolean, exit? : any}) {
      if (props.isAdd) {
           return (
                <Link to="/">
-                    <button type = "button">Cancel</button>
+                    <ColouredLoadingButton loading={props.loading} variant= "outlined" loadingPosition="start" startIcon={<CancelIcon />}>Cancel</ColouredLoadingButton>
                </Link>
           );
      } else {
           return (
-               <button type = "button" onClick = {props.exit}>Cancel</button>
+               <ColouredLoadingButton loading={props.loading} variant= "outlined" loadingPosition="start" startIcon={<CancelIcon />} onClick = {props.exit}>Cancel</ColouredLoadingButton>
           );
      }
 }

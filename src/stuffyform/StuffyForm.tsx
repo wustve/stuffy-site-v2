@@ -3,12 +3,9 @@ import OwnerInput from "./OwnerInput"
 import DeleteButton from "./DeleteButton"
 import CancelButton from "./CancelButton"
 import {ArticleData} from "../../interfaces/ArticleData";
-import {Route, NavLink, useRouteMatch} from "react-router-dom";
-import { StuffyMenuData } from "../../interfaces/StuffyMenuData";
-import {LocalStorageKey} from "../enums/LocalStorageKey";
-import {ColourMode} from '../enums/ColourMode'
-import '../header/Header.scss';
-
+import ColouredLoadingButton from "../colouredLoadingButton/colouredLoadingButton";
+import SaveIcon from '@mui/icons-material/Save';
+import ColouredTextField from "../colouredTextField/colouredTextField"
 export default class StuffyForm extends Component<{path : string, isAdd: boolean, exitSuccess : any, exit? : any, articleData?: ArticleData}, any> {
 
      constructor(props: any) {
@@ -21,7 +18,8 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
                nameOrigin : props.articleData ? props.articleData.name_origin : "", 
                origin : props.articleData ? props.articleData.origin : "", 
                otherNotes : props.articleData ? props.articleData.other_notes : "",
-               status : ""
+               status : "",
+               loading : false
           };
           this.handleChange = this.handleChange.bind(this);
           this.handleSubmit = this.handleSubmit.bind(this);
@@ -59,6 +57,9 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      }
 
      handleSubmit(event : any) {
+          this.setState({
+               loading: true,
+          });
           fetch('/stuffies' + this.props.path, {
                method: 'POST',
                headers: {
@@ -76,7 +77,7 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
               })
           }).then((res : any) => res.json())
           .then((res : any) => {
-              this.setState({status : res.msg});
+              this.setState({status : res.msg, loading:false});
               if (res.msg === 'Success') {
                    this.afterSubmit(res.url);
               }
@@ -88,12 +89,15 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
           if (!window.confirm("Are you sure you want to delete " + this.state.name + ' (' + this.state.animalType + ')')) {
                return;
           }
+          this.setState({
+               loading: true,
+          });
           fetch('/stuffies' + this.props.path, {
                method: 'DELETE'
           })
           .then(res => res.text())
           .then(res => {
-               this.setState({status : res});
+               this.setState({status : res, loading: false});
                if (res === 'Success') {
                     this.afterSubmit('/');
                }
@@ -104,41 +108,23 @@ export default class StuffyForm extends Component<{path : string, isAdd: boolean
      render() {
           return (
                <div id = "form">
-                    <form autoComplete = "off" onSubmit={this.handleSubmit}>
-                         <label className= 'required'>
-                              Name
-                         </label>
-                         <input {...this.generateInputProps("name", this.state.name)} required/>
-                         <label className= 'required'>
-                              Image Link
-                         </label>
-                         <input {...this.generateInputProps("image", this.state.image)} required/>
-                         <label className= 'required'>
-                              Owner
-                         </label>
+                    <form autoComplete = "off" onSubmit={this.handleSubmit} style={{display:"flex", flexDirection:'column'}}>
+                         <ColouredTextField variant="filled" label = "Name" {...this.generateInputProps("name", this.state.name)} required/>
+                         <ColouredTextField variant="filled" label = "Image" {...this.generateInputProps("image", this.state.image)} required/>
                          <OwnerInput isAdd={this.props.isAdd} value = {this.state.owner} onChangeFunc = {this.handleChange}/>
-                         <label className= 'required'>
-                              Animal Type
-                         </label>
-                         <input {...this.generateInputProps("animalType", this.state.animalType)} required/>
-                         <label>
-                              Name Origin 
-                         </label>
-                         <textarea {...this.generateTextAreaProps("nameOrigin")}>{this.state.nameOrigin}</textarea>
-                         <label>
-                              Origin
-                         </label>
-                         <textarea {...this.generateTextAreaProps("origin")}>{this.state.origin}</textarea>
-                         <label>
-                              Other Notes
-                         </label>
-                         <textarea {...this.generateTextAreaProps("otherNotes")}>{this.state.otherNotes}</textarea>
-                         <div id = 'status'><p>{this.state.status}</p></div>
-                         <input type = "submit" value = "Submit" id = "submit"/>
-                         <DeleteButton isAdd={this.props.isAdd} onClick={this.handleDelete}/>
-                         <CancelButton {...this.generateCancelButtonProps()}/>
+                         <ColouredTextField variant="filled" label = "Animal Type" {...this.generateInputProps("animalType", this.state.animalType)} required/>
+                         
+                         <ColouredTextField variant="filled" label = "Name Origin" multiline fullWidth {...this.generateInputProps("nameOrigin", this.state.nameOrigin)}/>
+                         
+                         <ColouredTextField variant="filled" label = "Origin" multiline fullWidth {...this.generateInputProps("origin", this.state.origin)}/>
+                        
+                         <ColouredTextField variant="filled" label = "Other Notes" multiline fullWidth {...this.generateInputProps("otherNotes", this.state.otherNotes)}/>
+                         <span id='status'>{this.state.status}</span>
+                         <ColouredLoadingButton loading={this.state.loading} type = "submit" loadingPosition="start" startIcon = {<SaveIcon/>} variant="outlined" className = "button">Submit</ColouredLoadingButton>
+                         <DeleteButton  loading={this.state.loading} isAdd={this.props.isAdd} onClick={this.handleDelete}/>
+                         <CancelButton  loading={this.state.loading} {...this.generateCancelButtonProps()}/>
+                         
                     </form>
-                    <p id = "form-disclaimer"><span style = {{color: "red"}}>*</span> indicates a required field</p>
                </div>
           );
      }

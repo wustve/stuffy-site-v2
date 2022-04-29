@@ -1,6 +1,7 @@
 import { Component, } from "react";
 import "./login.scss";
-
+import ColouredTextField from "../colouredTextField/colouredTextField"
+import ColouredLoadingButton from "../colouredLoadingButton/colouredLoadingButton"
 export default class Login extends Component<any, any>{
     constructor(props: any) {
         super(props);
@@ -49,12 +50,12 @@ export default class Login extends Component<any, any>{
 
     render() {
         return (
-            <form autoComplete="off" onSubmit={this.handleSubmit}>
-                Username: <input type='text' name='username' required={true} onChange={this.handleChange}></input>
+            <form autoComplete="off" onSubmit={this.handleSubmit} style={{display:"flex", flexDirection:'column'}}>
+                <ColouredTextField type='text' label = "Username" name='username' required={true} onChange={this.handleChange} variant = "filled" fullWidth></ColouredTextField>
 
-                Password: <input type='password' name='password' required={true} onChange={this.handleChange}></input>
-                <div id='status'>{this.state.status}</div>
-                <input type='submit' value='Login'></input>
+                <ColouredTextField type='password' label = "Password" name='password' required={true} onChange={this.handleChange}  variant = "filled" fullWidth></ColouredTextField>
+                <span id='status'>{this.state.status}</span>
+                <ColouredLoadingButton variant="outlined" type="submit" className="Button">Login</ColouredLoadingButton>
             </form>
         )
     }
