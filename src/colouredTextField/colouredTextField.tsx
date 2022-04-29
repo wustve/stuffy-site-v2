@@ -13,9 +13,13 @@ export default styled((props: TextFieldProps) => (
     },
     '& .MuiFilledInput-underline': {
         '&:before, &&:hover:before' : {
-          borderBottomColor: 'var(--border-colour) !important',
+            borderBottomColor: 'var(--border-colour) !important',
         },
       },
-      
+    "& .Mui-disabled" : {
+        WebkitTextFillColor: "var(--text-colour) !important",
+        color: "var(--text-colour) !important",
+
+    },
     
 })
