@@ -44,6 +44,10 @@ input#darkLight {
      display: none;
 }
 
+.toggle {
+     float: right;
+}
+
 .toggle .MuiSwitch-track {
      background-color:var(--text-colour);
 }
