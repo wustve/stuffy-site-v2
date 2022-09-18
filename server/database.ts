@@ -6,9 +6,7 @@ export default class DatabaseController {
 	constructor(dbURL: string) {
 		this.client = new Client({
 			connectionString: dbURL,
-			ssl: {
-				rejectUnauthorized: false
-			}
+			ssl: false
 		});
 	}
 
