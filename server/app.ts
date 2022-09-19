@@ -1,8 +1,7 @@
 import express from 'express';
 import path from 'path';
 import DatabaseController from './database.js';
-import luxon from 'luxon';
-const {DateTime} = luxon;
+import {DateTime} from 'luxon';
 import express_validator from 'express-validator';
 const {body, validationResult} = express_validator;
 import session from 'express-session';
